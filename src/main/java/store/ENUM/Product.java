@@ -1,8 +1,8 @@
 package store.ENUM;
 
 public enum Product {
-    COKE("콜라", 1000, 0, "탄산2+1"),
-    COKE_EXTRA("콜라", 1000, 7, null),
+    COKE("콜라", 1000, 7, "탄산2+1"),
+    COKE_EXTRA("콜라", 1000, 10, null),
     SODA("사이다", 1000, 8, "탄산2+1"),
     SODA_EXTRA("사이다", 1000, 7, null),
     ORANGE_JUICE("오렌지주스", 1800, 9, "MD추천상품"),
