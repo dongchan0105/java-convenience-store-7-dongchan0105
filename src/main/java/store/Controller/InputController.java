@@ -2,12 +2,18 @@ package store.Controller;
 
 import static store.ENUM.ErrorCode.RETRY_MESSAGE;
 
-import java.util.Arrays;
+import store.Repository.ProductRepository;
 import store.Validation.Validation;
 import store.View.InputView;
 
 public class InputController {
-    Validation validation = new Validation();
+    private final Validation validation = new Validation();
+    private final ProductRepository productRepository;
+
+    public InputController(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+        InputView inputView = new InputView(productRepository);
+    }
 
     public String[] getPurchaseList(){
         String[] purchase=InputView.getPurchaseList().split(",");
