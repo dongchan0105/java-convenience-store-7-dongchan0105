@@ -46,6 +46,9 @@ public class ProductRepository {
     }
 
     public Product findByName(String productName) {
-        return null;
+        return products.stream()
+                .filter(product -> product.getName().equals(productName))
+                .findFirst()
+                .orElse(null);
     }
 }

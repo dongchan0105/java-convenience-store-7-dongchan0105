@@ -7,12 +7,13 @@ import store.Validation.Validation;
 import store.View.InputView;
 
 public class InputController {
-    private final Validation validation = new Validation();
+    private final Validation validation;
     private final ProductRepository productRepository;
 
     public InputController(ProductRepository productRepository) {
         this.productRepository = productRepository;
         InputView inputView = new InputView(productRepository);
+        validation=new Validation(productRepository);
     }
 
     public String[] getPurchaseList(){
