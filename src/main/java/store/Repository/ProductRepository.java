@@ -35,8 +35,7 @@ public class ProductRepository {
         int price = Integer.parseInt(parts[1]);
         int quantity = Integer.parseInt(parts[2]);
         String promotion = parts[3];
-        Product product = new Product(name, price, quantity, promotion);
-        return product;
+        return new Product(name, price, quantity, promotion);
     }
 
 

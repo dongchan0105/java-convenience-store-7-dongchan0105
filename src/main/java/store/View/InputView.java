@@ -4,6 +4,7 @@ import static store.Constant.Constants.ADD_PROMOTION_QUANTITY;
 import static store.Constant.Constants.CONVENIENCE_ENTER;
 import static store.Constant.Constants.MEMBERSHIP_DISCOUNT;
 import static store.Constant.Constants.PURCHASE_QUANTITY;
+import static store.Constant.Constants.SHORTAGE_MESSAGE;
 
 import camp.nextstep.edu.missionutils.Console;
 import store.Repository.ProductRepository;
@@ -57,6 +58,10 @@ public class InputView {
 
     public static String getUserConfirmation() {
         return Console.readLine();
+    }
+
+    public static void showShortageMessage(String productName, int shortage){
+        System.out.printf(SHORTAGE_MESSAGE,productName,shortage);
     }
 
 

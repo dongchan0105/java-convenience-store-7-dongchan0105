@@ -31,6 +31,10 @@ public class InputController {
         }
     }
 
+    public static void showShortageMessage(String productName, int shortage){
+        InputView.showShortageMessage(productName, shortage);
+    }
+
     public static boolean isHaveMembership(){
         return InputView.isHaveMembership().equalsIgnoreCase("Y");
     }

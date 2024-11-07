@@ -1,23 +1,28 @@
 package store.Controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import store.domain.Receipt;
 import store.service.ProductService;
 
 public class StoreController {
     private final ProductService productService;
     private final InputController inputController;
+    private List<Receipt> receiptList;
 
     public StoreController(ProductService productService, InputController inputController) {
         this.productService = productService;
         this.inputController = inputController;
+        receiptList = new ArrayList<Receipt>();
     }
 
     public void processPurchase() {
         String[] purchaseList = inputController.getPurchaseList();
         Map<String, Integer> purchaseMap = parsePurchaseList(purchaseList);
 
-        productService.processPurchase(purchaseMap);
+        receiptList=productService.processPurchase(purchaseMap);
     }
 
     private Map<String, Integer> parsePurchaseList(String[] purchaseList) {

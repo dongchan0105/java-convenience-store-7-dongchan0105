@@ -19,22 +19,25 @@ public class ProductService {
     }
 
     public List<Receipt> processPurchase(Map<String, Integer> purchaseMap) {
-        List<Receipt> receiptsElement = new ArrayList<>();
+        List<Receipt> receipts = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : purchaseMap.entrySet()) {
             String productName = entry.getKey();
             int quantity = entry.getValue();
             Product product = productRepository.findByName(productName);
-            receiptsElement.add(processProductWithPromotion(product, quantity));
+            receipts.add(processProductWithPromotion(product, quantity));
         }
-        return receiptsElement;
+        return receipts;
     }
 
     private Receipt processProductWithPromotion(Product product, int quantity) {
+        // 프로모션 적용 가능 여부 확인
         Product eligibleProduct = isApplyPromotion(product.getName(), quantity);
         if (eligibleProduct.getPromotion() != null) {
-            return createReceipt(eligibleProduct, quantity,0);
+            return handlePromotion(eligibleProduct, quantity);
         }
-        return handlePromotion(eligibleProduct, quantity);
+
+        // 프로모션이 없는 경우 기본 결제
+        return createReceipt(product, quantity, 0);
     }
 
     private Product isApplyPromotion(String productName, int quantity) {
@@ -47,45 +50,47 @@ public class ProductService {
 
     private Receipt handlePromotion(Product product, int quantity) {
         int giveaway = calculatePromoQuantity(quantity, product.getPromotion());
-        int additionalQuantity = calculateAdditionalQuantity(product, quantity);
 
-        if (additionalQuantity > 0) {
-            requestAdditionalPurchase(product, additionalQuantity);
-            if (InputController.getUserConfirm()) {
-                quantity += additionalQuantity;
-                giveaway = calculatePromoQuantity(quantity, product.getPromotion());
+        // 프로모션 조건을 기반으로 최대 적용 가능 수량 및 부족한 수량 계산
+        String[] parts = product.getPromotion().replaceAll("[^0-9+]", "").split("\\+");
+        int buyQuantity = Integer.parseInt(parts[0]);
+        int freeQuantity = Integer.parseInt(parts[1]);
+        int promoThreshold = buyQuantity + freeQuantity;
+
+        int maxPromoQuantity = promoThreshold * (product.getQuantity() / promoThreshold);
+        int applicablePromoQuantity = Math.min(quantity, maxPromoQuantity);
+        int shortage = quantity - applicablePromoQuantity;
+
+        // 부족한 수량에 대해 사용자에게 정가 결제 여부 확인
+        if (shortage > 0) {
+            InputController.showShortageMessage(product.getName(), shortage);
+            if (InputController.getUserConfirm()) { // Y: 정가로 결제
+                return createReceiptWithShortage(product, applicablePromoQuantity, shortage, freeQuantity);
             }
+
+            // N: 프로모션 수량만 결제
+            return createReceipt(product, applicablePromoQuantity, giveaway);
         }
+
+        // 프로모션 전량 적용 가능 시
         return createReceipt(product, quantity, giveaway);
-        // 컨트롤러로 넘겨 처리
+    }
+
+    private Receipt createReceiptWithShortage(Product product, int promoQuantity, int shortage, int giveaway) {
+        int promoBasePrice = calculateBasePrice(product, promoQuantity);
+        int shortageBasePrice = calculateBasePrice(product, shortage);
+
+        // 최종 할인 및 결제 금액 계산
+        int promoDiscount = calculatePromoDiscount(product, giveaway);
+        int totalBasePrice = promoBasePrice + shortageBasePrice;
+
+        return new Receipt(product.getName(), promoQuantity + shortage, totalBasePrice, giveaway);
     }
 
     private int calculatePromoQuantity(int quantity, String promotion) {
         String[] parts = promotion.replaceAll("[^0-9+]", "").split("\\+");
         int promoQuantity = Integer.parseInt(parts[0]) + 1;
         return quantity / promoQuantity;
-    }
-
-    private int calculateAdditionalQuantity(Product product, int quantity) {
-        String[] parts = product.getPromotion().replaceAll("[^0-9+]", "").split("\\+");
-        int buyQuantity = Integer.parseInt(parts[0]);
-        int getQuantity = Integer.parseInt(parts[1]);
-        int promoThreshold = buyQuantity + getQuantity;
-
-        return promoThreshold - (quantity % promoThreshold);
-    }
-
-    private void requestAdditionalPurchase(Product product, int additionalQuantity) {
-        InputController.showAdditionalQuantityMessage(product.getName(), additionalQuantity);
-    }
-
-    private Receipt createReceipt(Product product, int quantity, int giveaway) {
-        int basePrice = calculateBasePrice(product, quantity);
-        int promoDiscount = calculatePromoDiscount(product, giveaway);
-        int membershipDiscount = calculateMembershipDiscount(basePrice, promoDiscount);
-        int finalPrice = calculateFinalPrice(basePrice, promoDiscount, membershipDiscount);
-
-        return new Receipt(product.getName(), quantity, basePrice, promoDiscount, membershipDiscount, finalPrice, giveaway);
     }
 
     private int calculateBasePrice(Product product, int quantity) {
@@ -96,13 +101,11 @@ public class ProductService {
         return product.getPrice() * giveaway;
     }
 
-    private int calculateMembershipDiscount(int basePrice, int promoDiscount) {
-        boolean hasMembership = InputController.isHaveMembership();
-        int membershipDiscount = hasMembership ? (int) ((basePrice - promoDiscount) * 0.3) : 0;
-        return Math.min(membershipDiscount, 8000); // 최대 8000원 할인
-    }
+    private Receipt createReceipt(Product product, int quantity, int giveaway) {
+        int basePrice = calculateBasePrice(product, quantity);
+        int promoDiscount = calculatePromoDiscount(product, giveaway);
 
-    private int calculateFinalPrice(int basePrice, int promoDiscount, int membershipDiscount) {
-        return basePrice - promoDiscount - membershipDiscount;
+        return new Receipt(product.getName(), quantity, basePrice, giveaway);
     }
 }
+
