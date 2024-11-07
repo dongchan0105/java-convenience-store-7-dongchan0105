@@ -31,7 +31,7 @@ public class InputController {
         }
     }
 
-    private boolean isHaveMembership(){
+    public static boolean isHaveMembership(){
         return InputView.isHaveMembership().equalsIgnoreCase("Y");
     }
 }
