@@ -51,13 +51,12 @@ public class InputView {
         return Console.readLine();
     }
 
-    public void showAdditionalQuantityMessage(String productName, int additionalQuantity) {
+    public static void showAdditionalQuantityMessage(String productName, int additionalQuantity) {
         System.out.printf(ADD_PROMOTION_QUANTITY, productName, additionalQuantity);
     }
 
-    public boolean getUserConfirmation() {
-        String response = Console.readLine();
-        return response.equalsIgnoreCase("Y");
+    public static String getUserConfirmation() {
+        return Console.readLine();
     }
 
 

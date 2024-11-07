@@ -34,4 +34,12 @@ public class InputController {
     public static boolean isHaveMembership(){
         return InputView.isHaveMembership().equalsIgnoreCase("Y");
     }
+
+    public static boolean getUserConfirm(){
+        return InputView.getUserConfirmation().equalsIgnoreCase("Y");
+    }
+
+    public static void showAdditionalQuantityMessage (String productName, int additionalQuantity){
+        InputView.showAdditionalQuantityMessage(productName, additionalQuantity);
+    }
 }

@@ -1,5 +1,7 @@
 package store.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import store.Controller.InputController;
 import store.Repository.ProductRepository;
@@ -16,13 +18,23 @@ public class ProductService {
         this.inputView = inputView;
     }
 
-    public void processPurchase(Map<String, Integer> purchaseMap) {
+    public List<Receipt> processPurchase(Map<String, Integer> purchaseMap) {
+        List<Receipt> receiptsElement = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : purchaseMap.entrySet()) {
             String productName = entry.getKey();
             int quantity = entry.getValue();
             Product product = productRepository.findByName(productName);
-            processProductWithPromotion(product, quantity);
+            receiptsElement.add(processProductWithPromotion(product, quantity));
         }
+        return receiptsElement;
+    }
+
+    private Receipt processProductWithPromotion(Product product, int quantity) {
+        Product eligibleProduct = isApplyPromotion(product.getName(), quantity);
+        if (eligibleProduct.getPromotion() != null) {
+            return createReceipt(eligibleProduct, quantity,0);
+        }
+        return handlePromotion(eligibleProduct, quantity);
     }
 
     private Product isApplyPromotion(String productName, int quantity) {
@@ -33,65 +45,64 @@ public class ProductService {
                 .orElse(productRepository.findByName(productName));
     }
 
-    private void processProductWithPromotion(Product product, int quantity) {
-        Product eligibleProduct = isApplyPromotion(product.getName(), quantity);
-        if (eligibleProduct.getPromotion() != null) {
-            calculateFinalPrice(eligibleProduct, quantity, 0);
-            return;
-        }
-        handlePromotion(eligibleProduct, quantity);
-    }
-
-    private void handlePromotion(Product product, int quantity) {
+    private Receipt handlePromotion(Product product, int quantity) {
         int giveaway = calculatePromoQuantity(quantity, product.getPromotion());
-        String[] parts = product.getPromotion().replaceAll("[^0-9+]", "").split("\\+");
-        int buyQuantity = Integer.parseInt(parts[0]); // 프로모션 조건에서 필요한 구매 수량 예: 2
-        int getQuantity = Integer.parseInt(parts[1]); // 증정 수량 예: 1
-        int promoThreshold = buyQuantity + getQuantity; // 예를 들어, 2+1 프로모션의 경우 3
+        int additionalQuantity = calculateAdditionalQuantity(product, quantity);
 
-        // 추가로 필요한 수량 계산
-        int remainingForNextPromo = promoThreshold - (quantity % promoThreshold);
-
-        if (remainingForNextPromo > 0 && remainingForNextPromo < buyQuantity) {
-            inputView.showAdditionalQuantityMessage(product.getName(), remainingForNextPromo);
-
-            // 사용자가 추가 구매를 원할 경우
-            if (inputView.getUserConfirmation()) {
-                quantity += remainingForNextPromo; // 추가 수량을 포함한 최종 수량
-                giveaway= calculatePromoQuantity(quantity, product.getPromotion());
+        if (additionalQuantity > 0) {
+            requestAdditionalPurchase(product, additionalQuantity);
+            if (InputController.getUserConfirm()) {
+                quantity += additionalQuantity;
+                giveaway = calculatePromoQuantity(quantity, product.getPromotion());
             }
         }
-
-        // 최종 계산 및 결제 로직
-        calculateFinalPrice(product, quantity, giveaway);
+        return createReceipt(product, quantity, giveaway);
+        // 컨트롤러로 넘겨 처리
     }
-
 
     private int calculatePromoQuantity(int quantity, String promotion) {
         String[] parts = promotion.replaceAll("[^0-9+]", "").split("\\+");
-        int promoQuantity = Integer.parseInt(parts[0])+1;
-        return  (quantity / promoQuantity);
+        int promoQuantity = Integer.parseInt(parts[0]) + 1;
+        return quantity / promoQuantity;
     }
 
-    private Receipt calculateFinalPrice(Product product, int quantity, int giveaway) {
-        // 1. 총 구매 금액 계산
-        int basePrice = product.getPrice() * quantity;
+    private int calculateAdditionalQuantity(Product product, int quantity) {
+        String[] parts = product.getPromotion().replaceAll("[^0-9+]", "").split("\\+");
+        int buyQuantity = Integer.parseInt(parts[0]);
+        int getQuantity = Integer.parseInt(parts[1]);
+        int promoThreshold = buyQuantity + getQuantity;
 
-        // 2. 행사 할인 금액 계산
-        int promoDiscount = product.getPrice() * giveaway;
+        return promoThreshold - (quantity % promoThreshold);
+    }
 
-        // 3. 멤버십 할인 적용
-        boolean hasMembership = InputController.isHaveMembership();
-        int membershipDiscount = hasMembership ? (int) ((basePrice - promoDiscount) * 0.3) : 0;
-        membershipDiscount = Math.min(membershipDiscount, 8000); // 최대 8000원 할인
+    private void requestAdditionalPurchase(Product product, int additionalQuantity) {
+        InputController.showAdditionalQuantityMessage(product.getName(), additionalQuantity);
+    }
 
-        // 4. 최종 결제 금액 계산
-        int finalPrice = basePrice - promoDiscount - membershipDiscount;
+    private Receipt createReceipt(Product product, int quantity, int giveaway) {
+        int basePrice = calculateBasePrice(product, quantity);
+        int promoDiscount = calculatePromoDiscount(product, giveaway);
+        int membershipDiscount = calculateMembershipDiscount(basePrice, promoDiscount);
+        int finalPrice = calculateFinalPrice(basePrice, promoDiscount, membershipDiscount);
 
-        // 5. 영수증 출력
         return new Receipt(product.getName(), quantity, basePrice, promoDiscount, membershipDiscount, finalPrice, giveaway);
     }
 
+    private int calculateBasePrice(Product product, int quantity) {
+        return product.getPrice() * quantity;
+    }
+
+    private int calculatePromoDiscount(Product product, int giveaway) {
+        return product.getPrice() * giveaway;
+    }
+
+    private int calculateMembershipDiscount(int basePrice, int promoDiscount) {
+        boolean hasMembership = InputController.isHaveMembership();
+        int membershipDiscount = hasMembership ? (int) ((basePrice - promoDiscount) * 0.3) : 0;
+        return Math.min(membershipDiscount, 8000); // 최대 8000원 할인
+    }
+
+    private int calculateFinalPrice(int basePrice, int promoDiscount, int membershipDiscount) {
+        return basePrice - promoDiscount - membershipDiscount;
+    }
 }
-
-
