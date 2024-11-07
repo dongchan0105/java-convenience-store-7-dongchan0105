@@ -1,5 +1,6 @@
 package store.View;
 
+import static store.Constant.Constants.ADD_PROMOTION_QUANTITY;
 import static store.Constant.Constants.CONVENIENCE_ENTER;
 import static store.Constant.Constants.MEMBERSHIP_DISCOUNT;
 import static store.Constant.Constants.PURCHASE_QUANTITY;
@@ -45,8 +46,19 @@ public class InputView {
         return Console.readLine();
     }
 
-    public static void isHaveMembership(){
+    public static String isHaveMembership(){
         System.out.println(MEMBERSHIP_DISCOUNT);
-        String membership=Console.readLine();
+        return Console.readLine();
     }
+
+    public void showAdditionalQuantityMessage(String productName, int additionalQuantity) {
+        System.out.printf(ADD_PROMOTION_QUANTITY, productName, additionalQuantity);
+    }
+
+    public boolean getUserConfirmation() {
+        String response = Console.readLine();
+        return response.equalsIgnoreCase("Y");
+    }
+
+
 }

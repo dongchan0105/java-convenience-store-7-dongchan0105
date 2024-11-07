@@ -30,4 +30,8 @@ public class InputController {
             }
         }
     }
+
+    private boolean isHaveMembership(){
+        return InputView.isHaveMembership().equalsIgnoreCase("Y");
+    }
 }
