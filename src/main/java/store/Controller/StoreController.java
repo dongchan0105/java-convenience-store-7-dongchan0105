@@ -4,36 +4,40 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import store.Repository.ProductRepository;
+import store.domain.Product;
 import store.domain.Receipt;
 import store.service.ProductService;
 
 public class StoreController {
     private final ProductService productService;
     private final InputController inputController;
+    private final ProductRepository productRepository;
     private List<Receipt> receiptList;
 
-    public StoreController(ProductService productService, InputController inputController) {
-        this.productService = productService;
-        this.inputController = inputController;
+    public StoreController() {
+        this.productRepository = new ProductRepository();
+        this.productService = new ProductService(productRepository);
+        this.inputController = new InputController(productRepository);
         receiptList = new ArrayList<Receipt>();
     }
 
     public void processPurchase() {
         String[] purchaseList = inputController.getPurchaseList();
-        Map<String, Integer> purchaseMap = parsePurchaseList(purchaseList);
-
+        Map<Product, Integer> purchaseMap = parsePurchaseList(purchaseList);
         receiptList=productService.processPurchase(purchaseMap);
     }
 
-    private Map<String, Integer> parsePurchaseList(String[] purchaseList) {
-        Map<String, Integer> purchaseMap = new HashMap<>();
+    private Map<Product, Integer> parsePurchaseList(String[] purchaseList) {
+        Map<Product, Integer> purchaseMap = new HashMap<>();
         for (String item : purchaseList) {
             String[] parts = item.split("-");
-            String productName = parts[0];
             int quantity = Integer.parseInt(parts[1]);
-            purchaseMap.put(productName, quantity);
+            purchaseMap.put(productRepository.findByName(parts[0]), quantity);
         }
         return purchaseMap;
     }
+
+    public void reflectRepository
 }
 
