@@ -13,5 +13,20 @@ public class Receipt {
         this.giveaway = giveaway;
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public int getEachPrice() {
+        return eachPrice;
+    }
+
+    public int getGiveaway() {
+        return giveaway;
+    }
 }
 

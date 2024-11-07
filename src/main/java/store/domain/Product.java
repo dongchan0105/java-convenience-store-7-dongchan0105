@@ -13,12 +13,12 @@ public class Product {
         this.promotion = promotion;
     }
 
-    public int getPrice() {
-        return price;
+    public void subtraction(int quantity) {
+        this.quantity -= quantity;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
+    public int getPrice() {
+        return price;
     }
 
     public String getName() {
@@ -33,9 +33,6 @@ public class Product {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 
 
     // Getters and Setters

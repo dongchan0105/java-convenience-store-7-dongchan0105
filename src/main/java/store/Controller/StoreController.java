@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import store.Repository.ProductRepository;
+import store.View.OutputView;
 import store.domain.Product;
 import store.domain.Receipt;
 import store.service.ProductService;
@@ -28,6 +29,7 @@ public class StoreController {
         receiptList=productService.processPurchase(purchaseMap);
     }
 
+
     private Map<Product, Integer> parsePurchaseList(String[] purchaseList) {
         Map<Product, Integer> purchaseMap = new HashMap<>();
         for (String item : purchaseList) {
@@ -38,6 +40,10 @@ public class StoreController {
         return purchaseMap;
     }
 
-    public void reflectRepository
+    public void reflectRepository(List<Receipt> receiptList) {
+
+    }
+
+
 }
 

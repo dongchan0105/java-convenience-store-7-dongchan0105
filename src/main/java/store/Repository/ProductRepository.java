@@ -50,4 +50,29 @@ public class ProductRepository {
                 .findFirst()
                 .orElse(null);
     }
+
+    public Product findByNameWithPromo(String productName) {
+        return products.stream()
+                .filter(product -> product.getName().equals(productName))
+                .filter(product -> product.getPromotion()!=null)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void reflectPurchase(Receipt receipt) {
+        int remainingQuantity = receipt.getQuantity();
+        Product promoProduct = findByNameWithPromo(receipt.getProductName());
+        Product nonPromoProduct = findByName(receipt.getProductName());
+        // 1. 프로모션 제품에서 가능한 만큼 재고 차감
+        if (promoProduct != null && promoProduct.getQuantity() > 0) {
+            int promoQuantity = Math.min(promoProduct.getQuantity(), remainingQuantity);
+            promoProduct.subtraction(promoQuantity);
+            remainingQuantity -= promoQuantity;
+        }
+        // 2. 남은 수량을 비프로모션 제품에서 차감
+        if (remainingQuantity > 0 && nonPromoProduct != null) {
+            nonPromoProduct.subtraction(remainingQuantity);
+        }
+    }
+
 }
