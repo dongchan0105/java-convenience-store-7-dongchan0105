@@ -29,6 +29,10 @@ public class StoreController {
         receiptList=productService.processPurchase(purchaseMap);
     }
 
+    public void checkMembershipStatus(){
+        boolean membership = InputController.isHaveMembership();
+    }
+
 
     private Map<Product, Integer> parsePurchaseList(String[] purchaseList) {
         Map<Product, Integer> purchaseMap = new HashMap<>();
@@ -42,7 +46,10 @@ public class StoreController {
 
     public void reflectRepository(List<Receipt> receiptList) {
 
+    }public void showReceipt(List<Receipt> receiptList) {
     }
+
+
 
 
 }

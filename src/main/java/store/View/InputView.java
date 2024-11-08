@@ -2,7 +2,7 @@ package store.View;
 
 import static store.Constant.Constants.ADD_PROMOTION_QUANTITY;
 import static store.Constant.Constants.CONVENIENCE_ENTER;
-import static store.Constant.Constants.MEMBERSHIP_DISCOUNT;
+import static store.Constant.Constants.HAS_MEMBERSHIP_DISCOUNT;
 import static store.Constant.Constants.PURCHASE_QUANTITY;
 import static store.Constant.Constants.SHORTAGE_MESSAGE;
 
@@ -48,7 +48,7 @@ public class InputView {
     }
 
     public static String isHaveMembership(){
-        System.out.println(MEMBERSHIP_DISCOUNT);
+        System.out.println(HAS_MEMBERSHIP_DISCOUNT);
         return Console.readLine();
     }
 
