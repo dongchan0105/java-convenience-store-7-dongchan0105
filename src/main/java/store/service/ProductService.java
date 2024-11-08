@@ -6,6 +6,7 @@ import java.util.Map;
 import store.Controller.InputController;
 import store.Repository.ProductRepository;
 import store.domain.Product;
+import store.domain.Promotion;
 import store.domain.Receipt;
 
 public class ProductService {
@@ -40,12 +41,12 @@ public class ProductService {
         return productRepository.getAllProducts().stream()
                 .filter(p -> p.getName().equals(productName) && p.getPromotion() != null)
                 .findFirst()
-                .orElse(productRepository.findByName(productName));
+                .orElse(productRepository.findAnyByName(productName));
     }
 
     private Receipt handlePromotion(Product product, int quantity) {
         // 프로모션 조건을 기반으로 최대 적용 가능 수량 및 부족한 수량 계산
-        String[] parts = product.getPromotion().replaceAll("[^0-9+]", "").split("\\+");
+        String[] parts = Promotion.getPromotionPolicy(product.getPromotion()).split("\\+");
         int buyQuantity = Integer.parseInt(parts[0]);
         int promoThreshold = buyQuantity + 1;
 
@@ -64,7 +65,7 @@ public class ProductService {
         }
         int giveaway = calculatePromoQuantity(quantity, product.getPromotion());
         // 프로모션 전량 적용 가능 시
-        if ((double) product.getQuantity() / promoThreshold == (double) (int) product.getQuantity() / promoThreshold) {
+        if (quantity%promoThreshold==0) {
             return createReceipt(product, quantity, giveaway);
         }
 

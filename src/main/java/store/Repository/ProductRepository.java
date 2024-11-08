@@ -46,9 +46,17 @@ public class ProductRepository {
         return products;
     }
 
-    public Product findByName(String productName) {
+    public Product findAnyByName(String productName) {
         return products.stream()
                 .filter(product -> product.getName().equals(productName))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Product findByNameWithNonPromo(String productName) {
+        return products.stream()
+                .filter(product -> product.getName().equals(productName))
+                .filter(product -> product.getPromotion()==null)
                 .findFirst()
                 .orElse(null);
     }
@@ -64,7 +72,7 @@ public class ProductRepository {
     public void reflectPurchase(Receipt receipt) {
         int remainingQuantity = receipt.getQuantity();
         Product promoProduct = findByNameWithPromo(receipt.getProductName());
-        Product nonPromoProduct = findByName(receipt.getProductName());
+        Product nonPromoProduct = findByNameWithNonPromo(receipt.getProductName());
         // 1. 프로모션 제품에서 가능한 만큼 재고 차감
         if (promoProduct != null && promoProduct.getQuantity() > 0) {
             int promoQuantity = Math.min(promoProduct.getQuantity(), remainingQuantity);

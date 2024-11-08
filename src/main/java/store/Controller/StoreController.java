@@ -47,7 +47,7 @@ public class StoreController {
         for (String item : purchaseList) {
             String[] parts = item.replaceAll("[\\[\\]]", "").split("-");
             int quantity = Integer.parseInt(parts[1]);
-            purchaseMap.put(productRepository.findByName(parts[0]), quantity);
+            purchaseMap.put(productRepository.findAnyByName(parts[0]), quantity);
         }
         return purchaseMap;
     }

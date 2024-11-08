@@ -49,16 +49,16 @@ public class InputView {
 
     public static String isHaveMembership(){
         System.out.println(HAS_MEMBERSHIP_DISCOUNT);
-        return Console.readLine();
+        return Console.readLine().toUpperCase();
     }
 
     public static String showAdditionalQuantityMessage(String productName, int additionalQuantity) {
         System.out.printf(ADD_PROMOTION_QUANTITY, productName, additionalQuantity);
-        return Console.readLine();
+        return Console.readLine().toUpperCase();
     }
 
     public static String getUserConfirmation() {
-        return Console.readLine();
+        return Console.readLine().toUpperCase();
     }
 
     public static void showShortageMessage(String productName, int shortage){

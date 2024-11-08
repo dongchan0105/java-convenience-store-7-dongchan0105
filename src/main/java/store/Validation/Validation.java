@@ -2,7 +2,6 @@ package store.Validation;
 
 import static store.ENUM.ErrorCode.*;
 
-import java.util.Arrays;
 import store.Repository.ProductRepository;
 import store.domain.Product;
 
@@ -22,7 +21,7 @@ public class Validation {
         request = request.replace("[", "").replace("]", "");
         String[] requirements = request.split("-");
         String productName = requirements[0].trim();
-        if(productRepository.findByName(productName)==null){
+        if(productRepository.findAnyByName(productName)==null){
             throw new IllegalArgumentException(NON_ARTICLE.getMessage());
         }
     }
