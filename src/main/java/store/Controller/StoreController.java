@@ -23,14 +23,22 @@ public class StoreController {
         receiptList = new ArrayList<Receipt>();
     }
 
+    public void storeOperation(){
+        do {
+            processPurchase();
+        } while (OutputView.additionalPurchaseStatus());
+    }
+
     public void processPurchase() {
         String[] purchaseList = inputController.getPurchaseList();
         Map<Product, Integer> purchaseMap = parsePurchaseList(purchaseList);
         receiptList=productService.processPurchase(purchaseMap);
+        OutputView.printReceipt(receiptList,checkMembershipStatus());
+        reflectRepository(receiptList);
     }
 
-    public void checkMembershipStatus(){
-        boolean membership = InputController.isHaveMembership();
+    public boolean checkMembershipStatus(){
+        return InputController.isHaveMembership();
     }
 
 
@@ -45,12 +53,10 @@ public class StoreController {
     }
 
     public void reflectRepository(List<Receipt> receiptList) {
-
-    }public void showReceipt(List<Receipt> receiptList) {
+        for (Receipt receipt : receiptList) {
+            productRepository.reflectPurchase(receipt);
+        }
     }
-
-
-
 
 }
 

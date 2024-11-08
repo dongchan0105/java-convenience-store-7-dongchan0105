@@ -52,8 +52,9 @@ public class InputView {
         return Console.readLine();
     }
 
-    public static void showAdditionalQuantityMessage(String productName, int additionalQuantity) {
+    public static String showAdditionalQuantityMessage(String productName, int additionalQuantity) {
         System.out.printf(ADD_PROMOTION_QUANTITY, productName, additionalQuantity);
+        return Console.readLine();
     }
 
     public static String getUserConfirmation() {

@@ -9,14 +9,16 @@ import store.View.InputView;
 public class InputController {
     private final Validation validation;
     private final ProductRepository productRepository;
+    private final InputView inputView;
 
     public InputController(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        InputView inputView = new InputView(productRepository);
+        inputView = new InputView(productRepository);
         validation=new Validation(productRepository);
     }
 
     public String[] getPurchaseList(){
+        inputView.openConvenienceStore();
         String[] purchase=InputView.getPurchaseList().split(",");
         while(true) {
             try {
@@ -43,7 +45,7 @@ public class InputController {
         return InputView.getUserConfirmation().equalsIgnoreCase("Y");
     }
 
-    public static void showAdditionalQuantityMessage (String productName, int additionalQuantity){
-        InputView.showAdditionalQuantityMessage(productName, additionalQuantity);
+    public static boolean getAdditionalUserConfirm (String productName, int additionalQuantity){
+        return InputView.showAdditionalQuantityMessage(productName, additionalQuantity).equalsIgnoreCase("Y");
     }
 }

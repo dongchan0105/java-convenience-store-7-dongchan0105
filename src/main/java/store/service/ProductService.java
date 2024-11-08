@@ -64,6 +64,17 @@ public class ProductService {
         }
         int giveaway = calculatePromoQuantity(quantity, product.getPromotion());
         // 프로모션 전량 적용 가능 시
+        if ((double) product.getQuantity() / promoThreshold == (int) product.getQuantity() / promoThreshold) {
+            return createReceipt(product, quantity, giveaway);
+        }
+
+        // 추가 구매 가능 여부를 사용자에게 확인
+        int additionalPurchase = promoThreshold - (quantity % promoThreshold);
+        if (InputController.getAdditionalUserConfirm(product.getName(), additionalPurchase)) {
+            quantity += additionalPurchase;
+            giveaway = calculatePromoQuantity(quantity, product.getPromotion());
+        }
+
         return createReceipt(product, quantity, giveaway);
     }
 

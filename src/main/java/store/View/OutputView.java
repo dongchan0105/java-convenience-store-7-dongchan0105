@@ -1,5 +1,6 @@
 package store.View;
 
+import static store.Constant.Constants.ADDITIONAL_STATUS;
 import static store.Constant.Constants.DIVISION_LINE;
 import static store.Constant.Constants.EVENT_DISCOUNT;
 import static store.Constant.Constants.MEMBERSHIP_DISCOUNT;
@@ -8,12 +9,13 @@ import static store.Constant.Constants.PRESENTATION_DIVISION_LINE;
 import static store.Constant.Constants.RECEIPT_START_FORM;
 import static store.Constant.Constants.TOTAL_PAYMENT;
 
+import camp.nextstep.edu.missionutils.Console;
 import java.util.List;
 import store.domain.Receipt;
 
 public class OutputView {
 
-    public void printReceipt(List<Receipt> receipts, boolean membership) {
+    public static void printReceipt(List<Receipt> receipts, boolean membership) {
         System.out.println(RECEIPT_START_FORM);
 
         printOrderForm(receipts);
@@ -24,7 +26,7 @@ public class OutputView {
         printFinalResult(receipts, membership);
     }
 
-    private void printFinalResult(List<Receipt> receipts, boolean membership) {
+    private static void printFinalResult(List<Receipt> receipts, boolean membership) {
         int promoDiscount = calculatePromoDiscount(receipts);
         int membershipDiscount = calculateMembershipDiscount(receipts, membership);
         int finalPrice = calculateFinalPrice(receipts, promoDiscount, membershipDiscount);
@@ -35,32 +37,32 @@ public class OutputView {
         System.out.printf(TOTAL_PAYMENT, finalPrice);
     }
 
-    private void printOrderForm(List<Receipt> receipts) {
+    private static void printOrderForm(List<Receipt> receipts) {
         receipts.forEach(receipt ->
                 System.out.printf(ORDER_FORM, receipt.getProductName(), receipt.getQuantity(),
                         receipt.getEachPrice() * receipt.getQuantity())
         );
     }
 
-    private void printGiveawayItems(List<Receipt> receipts) {
+    private static void printGiveawayItems(List<Receipt> receipts) {
         receipts.stream()
                 .filter(receipt -> receipt.getGiveaway() > 0)
                 .forEach(receipt -> System.out.printf("%s\t\t%d\n", receipt.getProductName(), receipt.getGiveaway()));
     }
 
-    private void printTotalPurchase(List<Receipt> receipts) {
+    private static void printTotalPurchase(List<Receipt> receipts) {
         int totalAmount = receipts.stream().mapToInt(Receipt::getQuantity).sum();
         int totalPrice = receipts.stream().mapToInt(receipt -> receipt.getEachPrice() * receipt.getQuantity()).sum();
         System.out.printf("총구매액\t\t%d\t%d\n", totalAmount, totalPrice);
     }
 
-    private int calculatePromoDiscount(List<Receipt> receipts) {
+    private static int calculatePromoDiscount(List<Receipt> receipts) {
         return receipts.stream()
                 .mapToInt(receipt -> receipt.getEachPrice() * receipt.getGiveaway())
                 .sum();
     }
 
-    private int calculateMembershipDiscount(List<Receipt> receipts, boolean membership) {
+    private static int calculateMembershipDiscount(List<Receipt> receipts, boolean membership) {
         if (!membership) {
             return 0;
         }
@@ -69,9 +71,15 @@ public class OutputView {
         return Math.min(discount, 8000); // 최대 8000원 할인
     }
 
-    private int calculateFinalPrice(List<Receipt> receipts, int promoDiscount, int membershipDiscount) {
+    private static int calculateFinalPrice(List<Receipt> receipts, int promoDiscount, int membershipDiscount) {
         int totalPurchase = receipts.stream().mapToInt(receipt -> receipt.getEachPrice() * receipt.getQuantity()).sum();
         return totalPurchase - promoDiscount - membershipDiscount;
     }
+
+    public static boolean additionalPurchaseStatus() {
+        System.out.println(ADDITIONAL_STATUS);
+        return Console.readLine().equalsIgnoreCase("Y");
+    }
+
 }
 
