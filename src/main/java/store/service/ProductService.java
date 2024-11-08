@@ -64,7 +64,7 @@ public class ProductService {
         }
         int giveaway = calculatePromoQuantity(quantity, product.getPromotion());
         // 프로모션 전량 적용 가능 시
-        if ((double) product.getQuantity() / promoThreshold == (int) product.getQuantity() / promoThreshold) {
+        if ((double) product.getQuantity() / promoThreshold == (double) (int) product.getQuantity() / promoThreshold) {
             return createReceipt(product, quantity, giveaway);
         }
 

@@ -10,7 +10,10 @@ public class Product {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
-        this.promotion = promotion;
+        this.promotion = null;
+        if (!promotion.equals("null")) {
+            this.promotion = promotion;
+        }
     }
 
     public void subtraction(int quantity) {
