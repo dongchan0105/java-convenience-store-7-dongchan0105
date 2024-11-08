@@ -1,5 +1,6 @@
 package store.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,11 +45,15 @@ public class ProductService {
                 .orElse(productRepository.findAnyByName(productName));
     }
 
+
     private Receipt handlePromotion(Product product, int quantity) {
         // 프로모션 조건을 기반으로 최대 적용 가능 수량 및 부족한 수량 계산
-        String[] parts = Promotion.getPromotionPolicy(product.getPromotion()).split("\\+");
-        int buyQuantity = Integer.parseInt(parts[0]);
-        int promoThreshold = buyQuantity + 1;
+        Promotion promotion = Promotion.getPromotion(product.getPromotion());
+        if(!promotion.isActive()){
+            return createReceipt(product, quantity, 0);
+        }
+        int buyQuantity = promotion.getBuyQuantity();
+        int promoThreshold = buyQuantity + promotion.getGiveAwayQuantity();
 
         int maxPromoQuantity = promoThreshold * (product.getQuantity() / promoThreshold);
         int applicablePromoQuantity = Math.min(quantity, maxPromoQuantity);
@@ -63,7 +68,7 @@ public class ProductService {
             // N: 프로모션 수량만 결제
             return createReceipt(product, maxPromoQuantity, product.getQuantity() / promoThreshold);
         }
-        int giveaway = calculatePromoQuantity(quantity, product.getPromotion());
+        int giveaway = calculatePromoQuantity(quantity, promotion);
         // 프로모션 전량 적용 가능 시
         if (quantity%promoThreshold==0) {
             return createReceipt(product, quantity, giveaway);
@@ -73,16 +78,15 @@ public class ProductService {
         int additionalPurchase = promoThreshold - (quantity % promoThreshold);
         if (InputController.getAdditionalUserConfirm(product.getName(), additionalPurchase)) {
             quantity += additionalPurchase;
-            giveaway = calculatePromoQuantity(quantity, product.getPromotion());
+            giveaway = calculatePromoQuantity(quantity, promotion);
         }
 
         return createReceipt(product, quantity, giveaway);
     }
 
 
-    private int calculatePromoQuantity(int quantity, String promotion) {
-        String[] parts = promotion.replaceAll("[^0-9+]", "").split("\\+");
-        int promoQuantity = Integer.parseInt(parts[0]) + 1;
+    private int calculatePromoQuantity(int quantity, Promotion promotion) {
+        int promoQuantity = promotion.getBuyQuantity()+promotion.getGiveAwayQuantity();
         return quantity / promoQuantity;
     }
 

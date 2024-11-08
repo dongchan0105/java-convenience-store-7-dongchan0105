@@ -22,7 +22,9 @@ public class InputView {
         productRepository.getAllProducts().forEach(product -> {
             String promotionInfo = "";
             OutputInfo outputinfo = getOutputInfo(product, promotionInfo);
-            System.out.printf("- %s %d원 %s %s\n", product.getName(), product.getPrice(), outputinfo.stockInfo(),
+
+            String formattedPrice = String.format("%,d", product.getPrice());
+            System.out.printf("- %s %s원 %s %s\n", product.getName(), formattedPrice, outputinfo.stockInfo(),
                     outputinfo.promotionInfo());
         });
     }

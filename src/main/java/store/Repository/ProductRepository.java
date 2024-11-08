@@ -15,6 +15,7 @@ public class ProductRepository {
     public ProductRepository(){
         products=new ArrayList<>();
         loadProducts();
+        loadPromotions();
     }
 
 
@@ -28,6 +29,27 @@ public class ProductRepository {
         } catch (IOException e) {
             System.out.println(IO_ERROR);
         }
+    }
+
+    private void loadPromotions() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/promotions.md"))) {
+            reader.readLine(); // 헤더 건너뛰기
+
+            reader.lines().forEach(ProductRepository::getPromotion);
+        } catch (IOException e) {
+            System.out.println("[ERROR] 프로모션 파일을 읽는 중 오류가 발생했습니다.");
+        }
+    }
+
+    private static void getPromotion(String line) {
+        String[] parts = line.split(",");
+        String name = parts[0].trim();
+        int buyQuantity = Integer.parseInt(parts[1].trim());
+        int getQuantity = Integer.parseInt(parts[2].trim());
+        String startDate = parts[3].trim();
+        String endDate = parts[4].trim();
+
+        Promotion.addPromotion(name, buyQuantity, getQuantity, startDate, endDate);
     }
 
 
