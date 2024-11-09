@@ -20,28 +20,29 @@ public class InputView {
     public void openConvenienceStore() {
         System.out.println(CONVENIENCE_ENTER);
         productRepository.getAllProducts().forEach(product -> {
-            String promotionInfo = "";
-            OutputInfo outputinfo = getOutputInfo(product, promotionInfo);
+            StockInfo stockInfo = getStockInfo(product);
 
             String formattedPrice = String.format("%,d", product.getPrice());
-            System.out.printf("- %s %s원 %s %s\n", product.getName(), formattedPrice, outputinfo.stockInfo(),
-                    outputinfo.promotionInfo());
+            System.out.printf("- %s %s원 %s %s\n", product.getName(), formattedPrice, stockInfo.stockInfo(),
+                    stockInfo.promotionInfo());
         });
     }
 
-    private static OutputInfo getOutputInfo(Product product, String promotionInfo) {
+    private static StockInfo getStockInfo(Product product) {
+        String promotionInfo = "";
         if (product.getPromotion() != null) {
-            promotionInfo = product.getPromotion();}
-        String stockInfo;
-        if (product.getQuantity() > 0) {
-            stockInfo = product.getQuantity() + "개";
-        } else {
-            stockInfo = "재고 없음";
+            promotionInfo = product.getPromotion();
         }
-        return new OutputInfo(promotionInfo, stockInfo);
+        String quantitiyInfo = "";
+        if (product.getQuantity() > 0) {
+            quantitiyInfo = product.getQuantity() + "개";
+        } else {
+            quantitiyInfo = "재고 없음";
+        }
+        return new StockInfo(promotionInfo, quantitiyInfo);
     }
 
-    private record OutputInfo(String promotionInfo, String stockInfo) {
+    private record StockInfo(String promotionInfo, String stockInfo) {
     }
 
     public static String getPurchaseList() {
@@ -49,22 +50,22 @@ public class InputView {
         return Console.readLine();
     }
 
-    public static String isHaveMembership(){
+    public static String isHaveMembership() {
         System.out.println(HAS_MEMBERSHIP_DISCOUNT);
-        return Console.readLine().toUpperCase();
+        return Console.readLine();
     }
 
     public static String showAdditionalQuantityMessage(String productName, int additionalQuantity) {
         System.out.printf(ADD_PROMOTION_QUANTITY, productName, additionalQuantity);
-        return Console.readLine().toUpperCase();
+        return Console.readLine();
     }
 
     public static String getUserConfirmation() {
-        return Console.readLine().toUpperCase();
+        return Console.readLine();
     }
 
-    public static void showShortageMessage(String productName, int shortage){
-        System.out.printf(SHORTAGE_MESSAGE,productName,shortage);
+    public static void showShortageMessage(String productName, int shortage) {
+        System.out.printf(SHORTAGE_MESSAGE, productName, shortage);
     }
 
 

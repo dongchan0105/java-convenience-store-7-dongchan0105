@@ -14,38 +14,76 @@ public class InputController {
     public InputController(ProductRepository productRepository) {
         this.productRepository = productRepository;
         inputView = new InputView(productRepository);
-        validation=new Validation(productRepository);
+        validation = new Validation(productRepository);
     }
 
-    public String[] getPurchaseList(){
+    public String[] getPurchaseList() {
         inputView.openConvenienceStore();
-        String[] purchase=InputView.getPurchaseList().split(",");
-        while(true) {
-            try {
-                for (String i : purchase) {
-                    validation.purchaseGoodsValidator(i);
-                }
+        return getValidPurchaseList();
+    }
+
+    private String[] getValidPurchaseList() {
+        while (true) {
+            String[] purchase = InputView.getPurchaseList().split(",");
+            if (isValidPurchase(purchase)) {
                 return purchase;
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-                System.out.println(RETRY_MESSAGE);
             }
         }
     }
 
-    public static void showShortageMessage(String productName, int shortage){
+    private boolean isValidPurchase(String[] purchase) {
+        try {
+            for (String item : purchase) {
+                validation.purchaseGoodsValidator(item);
+            }
+            return true;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+
+    public static void showShortageMessage(String productName, int shortage) {
         InputView.showShortageMessage(productName, shortage);
     }
 
-    public static boolean isHaveMembership(){
-        return InputView.isHaveMembership().equalsIgnoreCase("Y");
+    public boolean isHaveMembership() {
+        String input = InputView.isHaveMembership();
+        while (true) {
+            try {
+                validation.yesOrNo(input);
+                return input.equalsIgnoreCase("Y");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                input = InputView.isHaveMembership();
+            }
+        }
     }
 
-    public static boolean getUserConfirm(){
-        return InputView.getUserConfirmation().equalsIgnoreCase("Y");
+    public boolean getUserConfirm() {
+        String input = InputView.getUserConfirmation();
+        while (true) {
+            try {
+                validation.yesOrNo(input);
+                return input.equalsIgnoreCase("Y");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                input = InputView.getUserConfirmation();
+            }
+        }
     }
 
-    public static boolean getAdditionalUserConfirm (String productName, int additionalQuantity){
-        return InputView.showAdditionalQuantityMessage(productName, additionalQuantity).equalsIgnoreCase("Y");
+    public boolean getAdditionalUserConfirm(String productName, int additionalQuantity) {
+        String input = InputView.showAdditionalQuantityMessage(productName, additionalQuantity);
+        while (true) {
+            try {
+                validation.yesOrNo(input);
+                return input.equalsIgnoreCase("Y");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                input = InputView.showAdditionalQuantityMessage(productName, additionalQuantity);
+            }
+        }
     }
 }

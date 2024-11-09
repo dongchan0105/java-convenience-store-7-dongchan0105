@@ -18,8 +18,8 @@ public class StoreController {
 
     public StoreController() {
         this.productRepository = new ProductRepository();
-        this.productService = new ProductService(productRepository);
         this.inputController = new InputController(productRepository);
+        this.productService = new ProductService(productRepository,inputController);
         receiptList = new ArrayList<Receipt>();
     }
 
@@ -32,13 +32,13 @@ public class StoreController {
     public void processPurchase() {
         String[] purchaseList = inputController.getPurchaseList();
         Map<Product, Integer> purchaseMap = parsePurchaseList(purchaseList);
-        receiptList=productService.processPurchase(purchaseMap);
+        receiptList=productService.getReceiptInfo(purchaseMap);
         OutputView.printReceipt(receiptList,checkMembershipStatus());
         reflectRepository(receiptList);
     }
 
     public boolean checkMembershipStatus(){
-        return InputController.isHaveMembership();
+        return inputController.isHaveMembership();
     }
 
 

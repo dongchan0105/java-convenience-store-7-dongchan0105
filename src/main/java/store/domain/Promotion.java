@@ -2,19 +2,21 @@ package store.domain;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Promotion {
     private static final Map<String, Promotion> promotionMapping = new HashMap<>();
+    private Clock clock = Clock.system(ZoneId.systemDefault());
+
 
     private String name;
     private int buyQuantity;
     private int giveAwayQuantity;
     private LocalDate startDate;
     private LocalDate endDate;
-    private  Clock clock;
 
     private Promotion(String name, int buyQuantity, int giveAwayQuantity, LocalDate startDate, LocalDate endDate) {
         this.name = name;
@@ -22,7 +24,6 @@ public class Promotion {
         this.giveAwayQuantity = giveAwayQuantity;
         this.startDate = startDate;
         this.endDate = endDate;
-        clock=Clock.systemDefaultZone();
     }
 
 
@@ -37,10 +38,12 @@ public class Promotion {
         return promotionMapping.get(promotionName);
     }
 
-    public boolean isActive(LocalDate currentDate) {
-        return (currentDate.isEqual(startDate) || currentDate.isAfter(startDate)) &&
-                (currentDate.isEqual(endDate) || currentDate.isBefore(endDate));
+
+    public boolean isActive() {
+        LocalDate today = LocalDate.now(clock);
+        return (today.isEqual(startDate) || today.isAfter(startDate)) && (today.isEqual(endDate) || today.isBefore(endDate));
     }
+
 
     public int getBuyQuantity() {
         return buyQuantity;
