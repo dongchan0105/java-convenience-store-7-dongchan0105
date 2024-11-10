@@ -9,21 +9,25 @@ import java.util.Map;
 
 public class Promotion {
     private static final Map<String, Promotion> promotionMapping = new HashMap<>();
-    private Clock clock = Clock.system(ZoneId.systemDefault());
-
-
+    private Clock clock;
     private String name;
     private final int buyQuantity;
     private final int giveAwayQuantity;
     private LocalDate startDate;
     private LocalDate endDate;
 
-    private Promotion(String name, int buyQuantity, int giveAwayQuantity, LocalDate startDate, LocalDate endDate) {
+    public Promotion(String name, int buyQuantity, int giveAwayQuantity, LocalDate startDate, LocalDate endDate) {
+        this(name, buyQuantity, giveAwayQuantity, startDate, endDate, Clock.systemDefaultZone());
+    }
+
+    // Clock을 받는 생성자
+    public Promotion(String name, int buyQuantity, int giveAwayQuantity, LocalDate startDate, LocalDate endDate, Clock clock) {
         this.name = name;
         this.buyQuantity = buyQuantity;
         this.giveAwayQuantity = giveAwayQuantity;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.clock = clock;
     }
 
 
@@ -40,7 +44,7 @@ public class Promotion {
 
 
     public boolean isActive() {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(clock);
         return (today.isEqual(startDate) || today.isAfter(startDate)) && (today.isEqual(endDate) || today.isBefore(endDate));
     }
 

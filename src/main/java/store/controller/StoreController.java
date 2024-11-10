@@ -1,10 +1,11 @@
-package store.Controller;
+package store.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import store.repository.ProductRepository;
+import store.repository.PromotionRepository;
 import store.view.OutputView;
 import store.domain.Product;
 import store.domain.Receipt;
@@ -18,6 +19,7 @@ public class StoreController {
 
     public StoreController() {
         this.productRepository = new ProductRepository();
+        PromotionRepository promotionRepository = new PromotionRepository();
         this.inputController = new InputController(productRepository);
         this.productService = new ProductService(productRepository,inputController);
         receiptList = new ArrayList<Receipt>();

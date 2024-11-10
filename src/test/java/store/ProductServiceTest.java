@@ -2,7 +2,7 @@ package store;
 
 import camp.nextstep.edu.missionutils.test.NsTest;
 import org.junit.jupiter.api.Test;
-import store.Controller.InputController;
+import store.controller.InputController;
 import store.repository.ProductRepository;
 import store.service.ProductService;
 

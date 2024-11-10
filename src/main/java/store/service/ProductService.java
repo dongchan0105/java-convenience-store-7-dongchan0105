@@ -3,7 +3,7 @@ package store.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import store.Controller.InputController;
+import store.controller.InputController;
 import store.repository.ProductRepository;
 import store.domain.Product;
 import store.domain.Promotion;

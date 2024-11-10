@@ -1,4 +1,4 @@
-package store.Controller;
+package store.controller;
 
 import store.repository.ProductRepository;
 import store.validation.Validation;

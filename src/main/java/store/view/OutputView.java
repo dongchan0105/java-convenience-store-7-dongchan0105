@@ -1,15 +1,15 @@
 package store.view;
 
-import static store.Constant.Constants.ADDITIONAL_STATUS;
-import static store.Constant.Constants.DIVISION_LINE;
-import static store.Constant.Constants.EVENT_DISCOUNT;
-import static store.Constant.Constants.GIVEAWAY_FORM;
-import static store.Constant.Constants.MEMBERSHIP_DISCOUNT;
-import static store.Constant.Constants.ORDER_FORM;
-import static store.Constant.Constants.PRESENTATION_DIVISION_LINE;
-import static store.Constant.Constants.RECEIPT_START_FORM;
-import static store.Constant.Constants.TOTAL_PAYMENT;
-import static store.Constant.Constants.TOTAL_PURCHASE;
+import static store.constant.Constants.ADDITIONAL_STATUS;
+import static store.constant.Constants.DIVISION_LINE;
+import static store.constant.Constants.EVENT_DISCOUNT;
+import static store.constant.Constants.GIVEAWAY_FORM;
+import static store.constant.Constants.MEMBERSHIP_DISCOUNT;
+import static store.constant.Constants.ORDER_FORM;
+import static store.constant.Constants.PRESENTATION_DIVISION_LINE;
+import static store.constant.Constants.RECEIPT_START_FORM;
+import static store.constant.Constants.TOTAL_PAYMENT;
+import static store.constant.Constants.TOTAL_PURCHASE;
 
 import camp.nextstep.edu.missionutils.Console;
 import java.util.List;

@@ -1,10 +1,10 @@
 package store.view;
 
-import static store.Constant.Constants.ADD_PROMOTION_QUANTITY;
-import static store.Constant.Constants.CONVENIENCE_ENTER;
-import static store.Constant.Constants.HAS_MEMBERSHIP_DISCOUNT;
-import static store.Constant.Constants.PURCHASE_QUANTITY;
-import static store.Constant.Constants.SHORTAGE_MESSAGE;
+import static store.constant.Constants.ADD_PROMOTION_QUANTITY;
+import static store.constant.Constants.CONVENIENCE_ENTER;
+import static store.constant.Constants.HAS_MEMBERSHIP_DISCOUNT;
+import static store.constant.Constants.PURCHASE_QUANTITY;
+import static store.constant.Constants.SHORTAGE_MESSAGE;
 
 import camp.nextstep.edu.missionutils.Console;
 import store.repository.ProductRepository;
