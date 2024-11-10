@@ -1,15 +1,11 @@
 package store.domain;
 
-import java.time.Clock;
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Promotion {
-    private static final Map<String, Promotion> promotionMapping = new HashMap<>();
-    private Clock clock;
     private String name;
     private final int buyQuantity;
     private final int giveAwayQuantity;
@@ -17,37 +13,22 @@ public class Promotion {
     private LocalDate endDate;
 
     public Promotion(String name, int buyQuantity, int giveAwayQuantity, LocalDate startDate, LocalDate endDate) {
-        this(name, buyQuantity, giveAwayQuantity, startDate, endDate, Clock.systemDefaultZone());
-    }
-
-    // Clock을 받는 생성자
-    public Promotion(String name, int buyQuantity, int giveAwayQuantity, LocalDate startDate, LocalDate endDate, Clock clock) {
         this.name = name;
         this.buyQuantity = buyQuantity;
         this.giveAwayQuantity = giveAwayQuantity;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.clock = clock;
     }
-
-
-    public static void addPromotion(String name, int buyQuantity, int getQuantity, String startDate, String endDate) {
-        LocalDate start = LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE);
-        LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE);
-        Promotion promotion = new Promotion(name, buyQuantity, getQuantity, start, end);
-        promotionMapping.put(name, promotion);
-    }
-
-    public static Promotion getPromotion(String promotionName) {
-        return promotionMapping.get(promotionName);
-    }
-
 
     public boolean isActive() {
-        LocalDate today = LocalDate.now(clock);
+        LocalDate today = getCurrentDate();
         return (today.isEqual(startDate) || today.isAfter(startDate)) && (today.isEqual(endDate) || today.isBefore(endDate));
     }
 
+    private LocalDate getCurrentDate() {
+        LocalDateTime now = DateTimes.now();  // 현재 날짜와 시간을 LocalDateTime 객체로 가져옴
+        return now.toLocalDate(); // 날짜 부분만 추출하여 LocalDate로 반환
+    }
 
     public int getBuyQuantity() {
         return buyQuantity;
@@ -55,5 +36,11 @@ public class Promotion {
 
     public int getGiveAwayQuantity() {
         return giveAwayQuantity;
+    }
+
+    public static Promotion createPromotion(String name, int buyQuantity, int giveQuantity, String startDate, String endDate) {
+        LocalDate start = LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE);
+        LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE);
+        return new Promotion(name, buyQuantity, giveQuantity, start, end);
     }
 }

@@ -8,6 +8,7 @@ import store.repository.ProductRepository;
 import store.domain.Product;
 import store.domain.Promotion;
 import store.domain.Receipt;
+import store.repository.PromotionRepository;
 
 public class ProductService {
     private final ProductRepository productRepository;
@@ -47,7 +48,7 @@ public class ProductService {
 
 
     private Receipt handlePromotion(Product product, int quantity) {
-        Promotion promotion = Promotion.getPromotion(product.getPromotion());
+        Promotion promotion = PromotionRepository.getPromotion(product.getPromotion());
         if (!isPromotionActive(promotion)) {
             return createReceipt(product, quantity, 0);
         }

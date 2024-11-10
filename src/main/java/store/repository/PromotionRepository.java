@@ -3,9 +3,12 @@ package store.repository;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import store.domain.Promotion;
 
 public class PromotionRepository {
+    private static final Map<String, Promotion> promotionMapping = new HashMap<>();
 
     public PromotionRepository() {
         loadPromotions();
@@ -13,21 +16,26 @@ public class PromotionRepository {
 
     private void loadPromotions() {
         try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/promotions.md"))) {
-            reader.readLine();
-            reader.lines().forEach(PromotionRepository::getPromotions);
+            reader.readLine(); // 첫 줄 읽고 넘어가기 (헤더)
+            reader.lines().forEach(this::addPromotionFromLine);
         } catch (IOException e) {
             System.out.println("[ERROR] 프로모션 파일을 읽는 중 오류가 발생했습니다.");
         }
     }
 
-    private static void getPromotions(String line) {
+    private void addPromotionFromLine(String line) {
         PromotionComponent promoComponent = getPromotionComponent(line);
-
-        Promotion.addPromotion(promoComponent.name(), promoComponent.buyQuantity(), promoComponent.getQuantity(), promoComponent.startDate(),
-                promoComponent.endDate());
+        Promotion promotion = Promotion.createPromotion(
+                promoComponent.name(),
+                promoComponent.buyQuantity(),
+                promoComponent.getQuantity(),
+                promoComponent.startDate(),
+                promoComponent.endDate()
+        );
+        addPromotion(promoComponent.name(), promotion);
     }
 
-    private static PromotionComponent getPromotionComponent(String line) {
+    private PromotionComponent getPromotionComponent(String line) {
         String[] parts = line.split(",");
         String name = parts[0].trim();
         int buyQuantity = Integer.parseInt(parts[1].trim());
@@ -37,7 +45,14 @@ public class PromotionRepository {
         return new PromotionComponent(name, buyQuantity, getQuantity, startDate, endDate);
     }
 
-    private record PromotionComponent(String name, int buyQuantity, int getQuantity, String startDate, String endDate) {
+    private void addPromotion(String name, Promotion promotion) {
+        promotionMapping.put(name, promotion);
     }
 
+    public static Promotion getPromotion(String promotionName) {
+        return promotionMapping.get(promotionName);
+    }
+
+    private record PromotionComponent(String name, int buyQuantity, int getQuantity, String startDate, String endDate) {
+    }
 }

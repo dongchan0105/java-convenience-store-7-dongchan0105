@@ -3,21 +3,12 @@ package store;
 import static camp.nextstep.edu.missionutils.test.Assertions.assertNowTest;
 import static camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 import camp.nextstep.edu.missionutils.test.NsTest;
 import java.time.LocalDate;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ApplicationTest extends NsTest {
-
-    @BeforeEach
-    void setUp() {
-        // LocalDate.now()가 항상 2024-02-01을 반환하도록 설정
-        LocalDate fixedDate = LocalDate.of(2024, 2, 1);
-        mockStatic(LocalDate.class).when(LocalDate::now).thenReturn(fixedDate);
-    }
 
 
     @Test
