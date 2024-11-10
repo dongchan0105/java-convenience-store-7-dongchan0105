@@ -13,7 +13,9 @@ import static store.constant.Constants.TOTAL_PURCHASE;
 
 import camp.nextstep.edu.missionutils.Console;
 import java.util.List;
+import store.controller.InputController;
 import store.domain.Receipt;
+import store.validation.Validation;
 
 public class OutputView {
 
@@ -84,6 +86,16 @@ public class OutputView {
 
     public static boolean additionalPurchaseStatus() {
         System.out.println(ADDITIONAL_STATUS);
-        return Console.readLine().equalsIgnoreCase("Y");
+        String input = Console.readLine();
+        while (true) {
+            try {
+                Validation.yesOrNo(input);
+                return input.equalsIgnoreCase("Y");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                System.out.println(ADDITIONAL_STATUS);
+                input = Console.readLine();
+            }
+        }
     }
 }

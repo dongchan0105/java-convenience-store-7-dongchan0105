@@ -14,8 +14,8 @@ public class Validation {
 
     public void purchaseGoodsValidator(String input){
         validateInputFormat(input);
-        isEnough(input);
         isEXIST(input);
+        isEnough(input);
     }
 
     public void validateInputFormat(String request) {
@@ -39,7 +39,7 @@ public class Validation {
         }
     }
 
-    public void yesOrNo(String input){
+    public static void yesOrNo(String input){
         if(!input.equalsIgnoreCase("Y") && !input.equalsIgnoreCase("N")){
             throw new IllegalArgumentException(INVALID_FORMAT.getMessage());
         }

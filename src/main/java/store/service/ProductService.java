@@ -90,7 +90,7 @@ public class ProductService {
 
     private Receipt handleShortage(Product product, int quantity, int promoThreshold, int maxPromoQuantity, int shortage) {
         InputController.showShortageMessage(product.getName(), shortage);
-        if (inputController.getUserConfirm()) { // Y: 정가로 결제
+        if (inputController.getUserConfirm()) {
             int giveaway = product.getQuantity() / promoThreshold;
             return createReceipt(product, quantity, giveaway);
         }
@@ -103,10 +103,11 @@ public class ProductService {
         if (isExactPromoQuantity(quantity, promoThreshold)) {
             return createReceipt(product, quantity, giveaway);
         }
-        int additionalPurchase = promoThreshold - (quantity % promoThreshold);
-        if (inputController.getAdditionalUserConfirm(product.getName(), additionalPurchase)) {
-            quantity += additionalPurchase;
-            giveaway = calculatePromoQuantity(quantity, promotion);
+        if(quantity % promoThreshold==promotion.getBuyQuantity()) {
+            if (inputController.getAdditionalUserConfirm(product.getName(), promotion.getGiveAwayQuantity())) {
+                quantity += promotion.getGiveAwayQuantity();
+                giveaway = calculatePromoQuantity(quantity, promotion);
+            }
         }
         return createReceipt(product, quantity, giveaway);
     }
