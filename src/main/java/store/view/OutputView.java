@@ -1,4 +1,4 @@
-package store.View;
+package store.view;
 
 import static store.Constant.Constants.ADDITIONAL_STATUS;
 import static store.Constant.Constants.DIVISION_LINE;

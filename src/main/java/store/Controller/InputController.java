@@ -1,10 +1,8 @@
 package store.Controller;
 
-import static store.ENUM.ErrorCode.RETRY_MESSAGE;
-
-import store.Repository.ProductRepository;
-import store.Validation.Validation;
-import store.View.InputView;
+import store.repository.ProductRepository;
+import store.validation.Validation;
+import store.view.InputView;
 
 public class InputController {
     private final Validation validation;

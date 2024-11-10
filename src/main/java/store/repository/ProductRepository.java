@@ -1,4 +1,4 @@
-package store.Repository;
+package store.repository;
 
 import static store.ENUM.ErrorCode.IO_ERROR;
 

@@ -1,4 +1,4 @@
-package store.View;
+package store.view;
 
 import static store.Constant.Constants.ADD_PROMOTION_QUANTITY;
 import static store.Constant.Constants.CONVENIENCE_ENTER;
@@ -7,7 +7,7 @@ import static store.Constant.Constants.PURCHASE_QUANTITY;
 import static store.Constant.Constants.SHORTAGE_MESSAGE;
 
 import camp.nextstep.edu.missionutils.Console;
-import store.Repository.ProductRepository;
+import store.repository.ProductRepository;
 import store.domain.Product;
 
 public class InputView {

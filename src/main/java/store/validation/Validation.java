@@ -1,8 +1,8 @@
-package store.Validation;
+package store.validation;
 
 import static store.ENUM.ErrorCode.*;
 
-import store.Repository.ProductRepository;
+import store.repository.ProductRepository;
 import store.domain.Product;
 
 public class Validation {

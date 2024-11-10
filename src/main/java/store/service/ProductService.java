@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import store.Controller.InputController;
-import store.Repository.ProductRepository;
+import store.repository.ProductRepository;
 import store.domain.Product;
 import store.domain.Promotion;
 import store.domain.Receipt;

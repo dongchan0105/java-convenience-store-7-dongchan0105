@@ -13,8 +13,8 @@ public class Promotion {
 
 
     private String name;
-    private int buyQuantity;
-    private int giveAwayQuantity;
+    private final int buyQuantity;
+    private final int giveAwayQuantity;
     private LocalDate startDate;
     private LocalDate endDate;
 
@@ -40,7 +40,7 @@ public class Promotion {
 
 
     public boolean isActive() {
-        LocalDate today = LocalDate.now(clock);
+        LocalDate today = LocalDate.now();
         return (today.isEqual(startDate) || today.isAfter(startDate)) && (today.isEqual(endDate) || today.isBefore(endDate));
     }
 
