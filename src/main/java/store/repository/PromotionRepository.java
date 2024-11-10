@@ -1,5 +1,7 @@
 package store.repository;
 
+import static store.ENUM.ErrorCode.IO_ERROR;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,10 +18,10 @@ public class PromotionRepository {
 
     private void loadPromotions() {
         try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/promotions.md"))) {
-            reader.readLine(); // 첫 줄 읽고 넘어가기 (헤더)
+            reader.readLine();
             reader.lines().forEach(this::addPromotionFromLine);
         } catch (IOException e) {
-            System.out.println("[ERROR] 프로모션 파일을 읽는 중 오류가 발생했습니다.");
+            System.out.println(IO_ERROR);
         }
     }
 

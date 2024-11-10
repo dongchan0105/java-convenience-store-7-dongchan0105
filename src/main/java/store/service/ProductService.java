@@ -41,8 +41,11 @@ public class ProductService {
 
     private Product isApplyPromotion(String productName, int quantity) {
         return productRepository.getAllProducts().stream()
-                .filter(p -> p.getName().equals(productName) && p.getPromotion() != null)
+                .filter(p -> p.getName().equals(productName) && p.getPromotion() != null && p.getQuantity() > 0)
                 .findFirst()
+                .or(() -> productRepository.getAllProducts().stream()
+                        .filter(p -> p.getName().equals(productName) && p.getPromotion() == null)
+                        .findFirst())
                 .orElse(productRepository.findAnyByName(productName));
     }
 

@@ -26,8 +26,8 @@ public class Promotion {
     }
 
     private LocalDate getCurrentDate() {
-        LocalDateTime now = DateTimes.now();  // 현재 날짜와 시간을 LocalDateTime 객체로 가져옴
-        return now.toLocalDate(); // 날짜 부분만 추출하여 LocalDate로 반환
+        LocalDateTime now = DateTimes.now();
+        return now.toLocalDate();
     }
 
     public int getBuyQuantity() {
