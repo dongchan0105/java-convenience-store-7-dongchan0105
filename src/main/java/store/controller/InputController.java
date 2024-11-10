@@ -1,5 +1,7 @@
 package store.controller;
 
+import java.util.HashSet;
+import java.util.Set;
 import store.repository.ProductRepository;
 import store.validation.Validation;
 import store.view.InputView;
@@ -30,8 +32,14 @@ public class InputController {
     }
 
     private boolean isValidPurchase(String[] purchase) {
+        Set<String> productNames = new HashSet<>();
         try {
             for (String item : purchase) {
+                String productName = item.replaceAll("[\\[\\]]", "").split("-")[0].trim();
+                if (productNames.contains(productName)) {
+                    throw new IllegalArgumentException("[ERROR] 동일한 제품이 여러 번 입력되었습니다: " + productName);
+                }
+                productNames.add(productName);
                 validation.purchaseGoodsValidator(item);
             }
             return true;

@@ -53,18 +53,14 @@ public class ProductService {
     private Receipt handlePromotion(Product product, int quantity) {
         Promotion promotion = PromotionRepository.getPromotion(product.getPromotion());
         if (!isPromotionActive(promotion)) {
-            return createReceipt(product, quantity, 0);
-        }
-
+            return createReceipt(product, quantity, 0);}
         int promoThreshold = calculatePromoThreshold(promotion);
         int maxPromoQuantity = calculateMaxPromoQuantity(product, promoThreshold);
         int applicablePromoQuantity = Math.min(quantity, maxPromoQuantity);
         int shortage = calculateShortage(quantity, applicablePromoQuantity);
-
         if (hasShortage(shortage)) {
             return handleShortage(product, quantity, promoThreshold, maxPromoQuantity, shortage);
         }
-
         return processAdditionalPurchase(product, quantity, promoThreshold, promotion);
     }
 
@@ -88,7 +84,8 @@ public class ProductService {
         return shortage > 0;
     }
 
-    private Receipt handleShortage(Product product, int quantity, int promoThreshold, int maxPromoQuantity, int shortage) {
+    private Receipt handleShortage(Product product, int quantity, int promoThreshold, int maxPromoQuantity,
+                                   int shortage) {
         InputController.showShortageMessage(product.getName(), shortage);
         if (inputController.getUserConfirm()) {
             int giveaway = product.getQuantity() / promoThreshold;
@@ -103,7 +100,7 @@ public class ProductService {
         if (isExactPromoQuantity(quantity, promoThreshold)) {
             return createReceipt(product, quantity, giveaway);
         }
-        if(quantity % promoThreshold==promotion.getBuyQuantity()) {
+        if (quantity % promoThreshold == promotion.getBuyQuantity()) {
             if (inputController.getAdditionalUserConfirm(product.getName(), promotion.getGiveAwayQuantity())) {
                 quantity += promotion.getGiveAwayQuantity();
                 giveaway = calculatePromoQuantity(quantity, promotion);
@@ -115,7 +112,6 @@ public class ProductService {
     private boolean isExactPromoQuantity(int quantity, int promoThreshold) {
         return quantity % promoThreshold == 0;
     }
-
 
 
     private int calculatePromoQuantity(int quantity, Promotion promotion) {

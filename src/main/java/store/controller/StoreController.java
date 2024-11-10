@@ -1,5 +1,7 @@
 package store.controller;
 
+import static store.ENUM.ErrorCode.STOCK_SHORTAGE;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +23,11 @@ public class StoreController {
         this.productRepository = new ProductRepository();
         PromotionRepository promotionRepository = new PromotionRepository();
         this.inputController = new InputController(productRepository);
-        this.productService = new ProductService(productRepository,inputController);
+        this.productService = new ProductService(productRepository, inputController);
         receiptList = new ArrayList<Receipt>();
     }
 
-    public void storeOperation(){
+    public void storeOperation() {
         do {
             processPurchase();
         } while (OutputView.additionalPurchaseStatus());
@@ -34,12 +36,12 @@ public class StoreController {
     public void processPurchase() {
         String[] purchaseList = inputController.getPurchaseList();
         Map<Product, Integer> purchaseMap = parsePurchaseList(purchaseList);
-        receiptList=productService.getReceiptInfo(purchaseMap);
-        OutputView.printReceipt(receiptList,checkMembershipStatus());
+        receiptList = productService.getReceiptInfo(purchaseMap);
+        OutputView.printReceipt(receiptList, checkMembershipStatus());
         reflectRepository(receiptList);
     }
 
-    public boolean checkMembershipStatus(){
+    public boolean checkMembershipStatus() {
         return inputController.isHaveMembership();
     }
 
@@ -50,8 +52,11 @@ public class StoreController {
             String[] parts = item.replaceAll("[\\[\\]]", "").split("-");
             int quantity = Integer.parseInt(parts[1]);
             Product product = productRepository.findAnyByName(parts[0]);
-
-            purchaseMap.put(product, purchaseMap.getOrDefault(product, 0) + quantity);
+            int totalQuantity = purchaseMap.getOrDefault(product, 0) + quantity;
+            if (totalQuantity > product.getQuantity()) {
+                throw new IllegalArgumentException(STOCK_SHORTAGE.getMessage());
+            }
+            purchaseMap.put(product, totalQuantity);
         }
         return purchaseMap;
     }

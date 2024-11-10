@@ -12,7 +12,8 @@ public class Constants {
             + "상품명\t\t수량\t\t\t금액";
     public static final String ORDER_FORM = "%-10s %5d %10d%n"; // 상품명 왼쪽 정렬, 수량과 금액 오른쪽 정렬
     public static final String PRESENTATION_DIVISION_LINE = "=============증	정===============";
-    public static final String GIVEAWAY_FORM = "%-10s %5d%n"; ; // 증정 상품 정렬
+    public static final String GIVEAWAY_FORM = "%-10s %5d%n";
+    ; // 증정 상품 정렬
     public static final String DIVISION_LINE = "====================================";
     public static final String TOTAL_PURCHASE = "총구매액       %5d %15d%n";
     public static final String EVENT_DISCOUNT = "행사할인              %15s%n";

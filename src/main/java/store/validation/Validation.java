@@ -18,6 +18,7 @@ public class Validation {
         isEnough(input);
     }
 
+
     public void validateInputFormat(String request) {
         String[] requirements = request.replaceAll("[\\[\\]]", "").split("-");
         if (requirements.length != 2) {

@@ -22,7 +22,8 @@ public class Promotion {
 
     public boolean isActive() {
         LocalDate today = getCurrentDate();
-        return (today.isEqual(startDate) || today.isAfter(startDate)) && (today.isEqual(endDate) || today.isBefore(endDate));
+        return (today.isEqual(startDate) || today.isAfter(startDate)) && (today.isEqual(endDate) || today.isBefore(
+                endDate));
     }
 
     private LocalDate getCurrentDate() {
@@ -38,7 +39,8 @@ public class Promotion {
         return giveAwayQuantity;
     }
 
-    public static Promotion createPromotion(String name, int buyQuantity, int giveQuantity, String startDate, String endDate) {
+    public static Promotion createPromotion(String name, int buyQuantity, int giveQuantity, String startDate,
+                                            String endDate) {
         LocalDate start = LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE);
         LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE);
         return new Promotion(name, buyQuantity, giveQuantity, start, end);
