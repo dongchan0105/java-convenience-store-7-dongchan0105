@@ -1,7 +1,5 @@
 package store.controller;
 
-import static store.ENUM.ErrorCode.STOCK_SHORTAGE;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,11 +50,8 @@ public class StoreController {
             String[] parts = item.replaceAll("[\\[\\]]", "").split("-");
             int quantity = Integer.parseInt(parts[1]);
             Product product = productRepository.findAnyByName(parts[0]);
-            int totalQuantity = purchaseMap.getOrDefault(product, 0) + quantity;
-            if (totalQuantity > product.getQuantity()) {
-                throw new IllegalArgumentException(STOCK_SHORTAGE.getMessage());
-            }
-            purchaseMap.put(product, totalQuantity);
+
+            purchaseMap.put(product, purchaseMap.getOrDefault(product, 0) + quantity);
         }
         return purchaseMap;
     }
