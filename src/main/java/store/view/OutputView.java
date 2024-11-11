@@ -13,8 +13,8 @@ import static store.constant.Constants.TOTAL_PURCHASE;
 
 import camp.nextstep.edu.missionutils.Console;
 import java.util.List;
-import store.controller.InputController;
 import store.domain.Receipt;
+import store.service.MakeReceiptService;
 import store.validation.Validation;
 
 public class OutputView {
@@ -45,43 +45,19 @@ public class OutputView {
 
     private static void printTotalPurchase(List<Receipt> receipts) {
         int totalAmount = receipts.stream().mapToInt(Receipt::getQuantity).sum();
-        int totalPrice = receipts.stream().mapToInt(receipt -> receipt.getEachPrice() * receipt.getQuantity()).sum();
-        System.out.printf(TOTAL_PURCHASE, totalAmount, totalPrice); // 총구매액
+        int totalPrice = MakeReceiptService.calculateTotalPurchase(receipts);
+        System.out.printf(TOTAL_PURCHASE, totalAmount, totalPrice);
     }
 
     private static void printFinalResult(List<Receipt> receipts, boolean membership) {
-        int promoDiscount = calculatePromoDiscount(receipts);
-        int membershipDiscount = calculateMembershipDiscount(receipts, membership);
-        int finalPrice = calculateFinalPrice(receipts, promoDiscount, membershipDiscount);
+        int promoDiscount = MakeReceiptService.calculatePromoDiscount(receipts);
+        int membershipDiscount = MakeReceiptService.calculateMembershipDiscount(receipts, membership);
+        int finalPrice = MakeReceiptService.calculateFinalPrice(receipts, promoDiscount, membershipDiscount);
 
         printTotalPurchase(receipts);
         System.out.printf(EVENT_DISCOUNT, String.format("-%,d", promoDiscount));
         System.out.printf(MEMBERSHIP_DISCOUNT, String.format("-%,d", membershipDiscount));
         System.out.printf(TOTAL_PAYMENT, finalPrice);
-    }
-
-
-
-    private static int calculatePromoDiscount(List<Receipt> receipts) {
-        return receipts.stream()
-                .mapToInt(receipt -> receipt.getEachPrice() * receipt.getGiveaway())
-                .sum();
-    }
-
-    private static int calculateMembershipDiscount(List<Receipt> receipts, boolean membership) {
-        if (!membership) {
-            return 0;
-        }
-        int nonPromotionProducts = receipts.stream()
-                .filter(receipt -> receipt.getNonPromoQuantity() != 0)
-                .mapToInt(receipt -> receipt.getNonPromoQuantity() * receipt.getEachPrice()).sum();
-        int discount = (int) (nonPromotionProducts * 0.3);
-        return Math.min(discount, 8000);
-    }
-
-    private static int calculateFinalPrice(List<Receipt> receipts, int promoDiscount, int membershipDiscount) {
-        int totalPurchase = receipts.stream().mapToInt(receipt -> receipt.getEachPrice() * receipt.getQuantity()).sum();
-        return totalPurchase - promoDiscount - membershipDiscount;
     }
 
     public static boolean additionalPurchaseStatus() {
