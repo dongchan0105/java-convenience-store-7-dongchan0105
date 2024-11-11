@@ -16,7 +16,7 @@ public class Product {
         }
     }
 
-    public void subtraction(int quantity) {
+    public void decreaseQuantity(int quantity) {
         this.quantity -= quantity;
     }
 

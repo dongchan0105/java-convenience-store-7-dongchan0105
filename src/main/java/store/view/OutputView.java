@@ -19,6 +19,14 @@ import store.validation.Validation;
 
 public class OutputView {
 
+    public static void displayMessage(String message) {
+        System.out.println(message);
+    }
+
+    public static void printErrorMessage(String message) {
+        System.out.println(message);
+    }
+
     public static void printReceipt(List<Receipt> receipts, boolean membership) {
         System.out.println(RECEIPT_START_FORM);
 

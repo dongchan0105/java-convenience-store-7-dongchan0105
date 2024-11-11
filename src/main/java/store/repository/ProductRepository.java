@@ -79,7 +79,7 @@ public class ProductRepository {
         Product promoProduct = findByNameWithPromo(productName);
         if (promoProduct != null && promoProduct.getQuantity() > 0) {
             int promoQuantity = Math.min(promoProduct.getQuantity(), remainingQuantity);
-            promoProduct.subtraction(promoQuantity);
+            promoProduct.decreaseQuantity(promoQuantity);
             remainingQuantity -= promoQuantity;
         }
         return remainingQuantity;
@@ -89,7 +89,7 @@ public class ProductRepository {
         if (remainingQuantity > 0) {
             Product nonPromoProduct = findByNameWithNonPromo(productName);
             if (nonPromoProduct != null) {
-                nonPromoProduct.subtraction(remainingQuantity);
+                nonPromoProduct.decreaseQuantity(remainingQuantity);
             }
         }
     }

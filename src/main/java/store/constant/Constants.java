@@ -20,4 +20,7 @@ public class Constants {
     public static final String MEMBERSHIP_DISCOUNT = "멤버십할인          %15s%n";
     public static final String TOTAL_PAYMENT = "내실돈               %,15d%n";
     public static final String ADDITIONAL_STATUS = "감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)";
+
+    public static final String DELIMITER_PATTERN = "[\\[\\]]";
+    public static final String QUANTITY_SEPARATOR = "-";
 }

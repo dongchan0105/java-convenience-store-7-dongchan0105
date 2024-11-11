@@ -2,7 +2,7 @@ package store;
 
 import camp.nextstep.edu.missionutils.test.NsTest;
 import org.junit.jupiter.api.Test;
-import store.controller.InputController;
+import store.controller.I_OController;
 import store.repository.ProductRepository;
 import store.service.ProductService;
 
@@ -13,7 +13,7 @@ public class ProductServiceTest extends NsTest {
 
     private ProductService productService;
     private ProductRepository productRepository;
-    private InputController inputController;
+    private I_OController IOController;
 
     @Override
     public void runMain() {

@@ -20,7 +20,7 @@ public class MakeReceiptService {
                 .mapToInt(receipt -> (receipt.getNonPromoQuantity()) * receipt.getEachPrice())
                 .sum();
         int discount = (int) (nonPromotionProducts * 0.3);
-        return Math.min(discount, 8000); // 최대 8000원 할인
+        return Math.min(discount, 8000);
     }
 
     public static int calculateTotalPurchase(List<Receipt> receipts) {

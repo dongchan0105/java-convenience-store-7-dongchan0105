@@ -3,7 +3,7 @@ package store.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import store.controller.InputController;
+import store.controller.I_OController;
 import store.repository.ProductRepository;
 import store.domain.Product;
 import store.domain.Promotion;
@@ -12,11 +12,11 @@ import store.repository.PromotionRepository;
 
 public class ProductService {
     private final ProductRepository productRepository;
-    private final InputController inputController;
+    private final I_OController IOController;
 
-    public ProductService(ProductRepository productRepository, InputController inputController) {
+    public ProductService(ProductRepository productRepository, I_OController IOController) {
         this.productRepository = productRepository;
-        this.inputController = inputController;
+        this.IOController = IOController;
     }
 
     public List<Receipt> getReceiptInfo(Map<Product, Integer> purchaseMap) {
@@ -84,8 +84,8 @@ public class ProductService {
     }
 
     private Receipt handleShortage(Product product, int quantity, int promoThreshold, int maxPromoQuantity,int shortage) {
-        InputController.showShortageMessage(product.getName(), shortage);
-        if (inputController.getUserConfirm()) {
+        I_OController.showShortageMessage(product.getName(), shortage);
+        if (IOController.getUserConfirm()) {
             int giveaway = product.getQuantity() / promoThreshold;
             return createReceipt(product, quantity, shortage, giveaway);
         }
@@ -99,7 +99,7 @@ public class ProductService {
             return createReceipt(product, quantity, 0, giveaway);
         }
         if (quantity % promoThreshold == promotion.getBuyQuantity()) {
-            if (inputController.getAdditionalUserConfirm(product.getName(), promotion.getGiveAwayQuantity())) {
+            if (IOController.getAdditionalUserConfirm(product.getName(), promotion.getGiveAwayQuantity())) {
                 quantity += promotion.getGiveAwayQuantity();
                 giveaway = calculatePromoQuantity(quantity, promotion);
             }
