@@ -36,7 +36,7 @@ public class ProductService {
             return handlePromotion(eligibleProduct, quantity);
         }
         // 프로모션이 없는 경우 기본 결제
-        return createReceipt(product, quantity, 0);
+        return createReceipt(product, quantity,quantity, 0);
     }
 
     private Product isApplyPromotion(String productName, int quantity) {
@@ -53,7 +53,7 @@ public class ProductService {
     private Receipt handlePromotion(Product product, int quantity) {
         Promotion promotion = PromotionRepository.getPromotion(product.getPromotion());
         if (!isPromotionActive(promotion)) {
-            return createReceipt(product, quantity, 0);}
+            return createReceipt(product, quantity,quantity, 0);}
         int promoThreshold = calculatePromoThreshold(promotion);
         int maxPromoQuantity = calculateMaxPromoQuantity(product, promoThreshold);
         int applicablePromoQuantity = Math.min(quantity, maxPromoQuantity);
@@ -89,16 +89,16 @@ public class ProductService {
         InputController.showShortageMessage(product.getName(), shortage);
         if (inputController.getUserConfirm()) {
             int giveaway = product.getQuantity() / promoThreshold;
-            return createReceipt(product, quantity, giveaway);
+            return createReceipt(product, quantity, shortage,giveaway);
         }
         int giveaway = product.getQuantity() / promoThreshold;
-        return createReceipt(product, maxPromoQuantity, giveaway);
+        return createReceipt(product, maxPromoQuantity,0, giveaway);
     }
 
     private Receipt processAdditionalPurchase(Product product, int quantity, int promoThreshold, Promotion promotion) {
         int giveaway = calculatePromoQuantity(quantity, promotion);
         if (isExactPromoQuantity(quantity, promoThreshold)) {
-            return createReceipt(product, quantity, giveaway);
+            return createReceipt(product, quantity,0, giveaway);
         }
         if (quantity % promoThreshold == promotion.getBuyQuantity()) {
             if (inputController.getAdditionalUserConfirm(product.getName(), promotion.getGiveAwayQuantity())) {
@@ -106,7 +106,7 @@ public class ProductService {
                 giveaway = calculatePromoQuantity(quantity, promotion);
             }
         }
-        return createReceipt(product, quantity, giveaway);
+        return createReceipt(product, quantity,quantity-(giveaway*promoThreshold), giveaway);
     }
 
     private boolean isExactPromoQuantity(int quantity, int promoThreshold) {
@@ -120,8 +120,8 @@ public class ProductService {
     }
 
 
-    private Receipt createReceipt(Product product, int quantity, int giveaway) {
-        return new Receipt(product.getName(), quantity, product.getPrice(), giveaway);
+    private Receipt createReceipt(Product product, int quantity,int nonPromoQuantity, int giveaway) {
+        return new Receipt(product.getName(), quantity,nonPromoQuantity, product.getPrice(), giveaway);
     }
 }
 

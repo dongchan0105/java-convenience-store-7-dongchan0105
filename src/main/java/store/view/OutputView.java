@@ -61,6 +61,7 @@ public class OutputView {
     }
 
 
+
     private static int calculatePromoDiscount(List<Receipt> receipts) {
         return receipts.stream()
                 .mapToInt(receipt -> receipt.getEachPrice() * receipt.getGiveaway())
@@ -69,14 +70,13 @@ public class OutputView {
 
     private static int calculateMembershipDiscount(List<Receipt> receipts, boolean membership) {
         if (!membership) {
-            return 0;}
-        return receipts.stream()
-                .mapToInt(receipt -> {
-                    int itemTotalPayPrice = (receipt.getQuantity() - receipt.getGiveaway()) * receipt.getEachPrice();
-                    int discountTarget = Math.min(itemTotalPayPrice, 8000);
-                    return (int) (discountTarget * 0.3);
-                })
-                .sum();
+            return 0;
+        }
+        int nonPromotionProducts = receipts.stream()
+                .filter(receipt -> receipt.getNonPromoQuantity() != 0)
+                .mapToInt(receipt -> receipt.getNonPromoQuantity() * receipt.getEachPrice()).sum();
+        int discount = (int) (nonPromotionProducts * 0.3);
+        return Math.min(discount, 8000); // 최대 8000원 할인
     }
 
     private static int calculateFinalPrice(List<Receipt> receipts, int promoDiscount, int membershipDiscount) {
