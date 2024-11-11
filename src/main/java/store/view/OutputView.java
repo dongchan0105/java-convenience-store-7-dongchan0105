@@ -71,15 +71,12 @@ public class OutputView {
     public static boolean additionalPurchaseStatus() {
         System.out.println(ADDITIONAL_STATUS);
         String input = Console.readLine();
-        while (true) {
-            try {
-                Validation.yesOrNo(input);
-                return input.equalsIgnoreCase("Y");
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-                System.out.println(ADDITIONAL_STATUS);
-                input = Console.readLine();
-            }
+        try {
+            Validation.yesOrNo(input);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return additionalPurchaseStatus();
         }
+        return input.equalsIgnoreCase("Y");
     }
 }
