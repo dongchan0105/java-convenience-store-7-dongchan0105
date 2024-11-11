@@ -16,7 +16,7 @@ public class MakeReceiptService {
             return 0;
         }
         int nonPromotionProducts = receipts.stream()
-                .filter(receipt -> receipt.getNonPromoQuantity() != 0)
+                .filter(receipt -> receipt.getNonPromoQuantity() > 0)
                 .mapToInt(receipt -> (receipt.getNonPromoQuantity()) * receipt.getEachPrice())
                 .sum();
         int discount = (int) (nonPromotionProducts * 0.3);

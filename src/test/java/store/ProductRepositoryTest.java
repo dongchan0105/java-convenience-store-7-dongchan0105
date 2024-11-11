@@ -33,13 +33,13 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    public void testReflectPurchase() {
+    public void testUpdateRepository() {
         Product product = productRepository.findAnyByName("사이다");
         int initialQuantity = product.getQuantity();
 
         // 구매 후 재고 반영
         Receipt receipt = new Receipt("사이다", 3,0, product.getPrice(), 1);
-        productRepository.reflectPurchase(receipt);
+        productRepository.updateRepository(receipt);
 
         // 재고 감소 확인
         assertEquals(initialQuantity - 3, product.getQuantity(), "재고 반영이 적절하게 반영되는지");

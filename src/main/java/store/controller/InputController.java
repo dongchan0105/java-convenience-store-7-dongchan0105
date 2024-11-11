@@ -11,11 +11,11 @@ import store.validation.Validation;
 import store.view.InputView;
 import store.view.OutputView;
 
-public class I_OController {
+public class InputController {
     private final Validation validation;
     private final InputView inputView;
 
-    public I_OController(ProductRepository productRepository) {
+    public InputController(ProductRepository productRepository) {
         inputView = new InputView(productRepository);
         validation = new Validation(productRepository);
     }

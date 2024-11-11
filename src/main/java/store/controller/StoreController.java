@@ -13,14 +13,14 @@ import store.service.ProductService;
 
 public class StoreController {
     private final ProductService productService;
-    private final I_OController IOController;
+    private final InputController IOController;
     private final ProductRepository productRepository;
     private List<Receipt> receiptList;
 
     public StoreController() {
         this.productRepository = new ProductRepository();
         PromotionRepository promotionRepository = new PromotionRepository();
-        this.IOController = new I_OController(productRepository);
+        this.IOController = new InputController(productRepository);
         this.productService = new ProductService(productRepository, IOController);
         receiptList = new ArrayList<>();
     }
@@ -52,7 +52,7 @@ public class StoreController {
 
     private void reflectRepository(List<Receipt> receiptList) {
         for (Receipt receipt : receiptList) {
-            productRepository.reflectPurchase(receipt);
+            productRepository.updateRepository(receipt);
         }
     }
 }

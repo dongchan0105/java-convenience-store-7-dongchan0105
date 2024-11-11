@@ -1,41 +1,42 @@
 package store;
 
-import camp.nextstep.edu.missionutils.test.NsTest;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import store.controller.I_OController;
+import store.controller.InputController;
+import store.domain.Receipt;
+import store.domain.Product;
 import store.repository.ProductRepository;
 import store.service.ProductService;
 
-import static camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
+import java.util.Map;
 
-public class ProductServiceTest extends NsTest {
+class ProductServiceTest {
 
     private ProductService productService;
     private ProductRepository productRepository;
-    private I_OController IOController;
+    private InputController inputController;
 
-    @Override
-    public void runMain() {
-        Application.main(new String[]{});
+    @BeforeEach
+    void setUp() {
+        productRepository = new ProductRepository();
+        inputController = new InputController(productRepository);
+        productService = new ProductService(productRepository, inputController);
     }
 
     @Test
-    public void testGetReceiptInfo() {
-        // Given: 사용자가 사이다 2개를 구매하고자 함
-        String purchaseInput = "[사이다-2]";
-        String hasMembership = "y";
-        String additionalPurchase = "y";
-
-        // When: 해당 입력으로 테스트 실행
-        assertSimpleTest(() -> {
-            run(purchaseInput, hasMembership, additionalPurchase,"n");
-
-            // Then: 예상 결과가 출력에 포함되어 있는지 확인
-            assertThat(output().replaceAll("\\s", "")).contains("내실돈2,000");
-        });
+    void 프로모션_없는_상품_구매() {
+        Product product = productRepository.findAnyByName("비타민워터");
+        List<Receipt> receipts = productService.getReceiptInfo(Map.of(product, 3));
+        assertThat(receipts).hasSize(1);
+        assertThat(receipts.get(0).getProductName()).isEqualTo("비타민워터");
+        assertThat(receipts.get(0).getGiveaway()).isEqualTo(0);
     }
+
+
 }
+
 
 
 

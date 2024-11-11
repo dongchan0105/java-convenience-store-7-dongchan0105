@@ -28,13 +28,12 @@ public class ProductRepository {
     }
 
     private void addProductList(String line) {
-        String[] parts = line.split(",");
-        Product product = getProduct(parts);
+        Product product = parseProduct(line);
         products.add(product);
     }
 
-
-    private static Product getProduct(String[] parts) {
+    private static Product parseProduct(String line) {
+        String[] parts = line.split(",");
         String name = parts[0];
         int price = Integer.parseInt(parts[1]);
         int quantity = Integer.parseInt(parts[2]);
@@ -69,7 +68,7 @@ public class ProductRepository {
                 .orElse(null);
     }
 
-    public void reflectPurchase(Receipt receipt) {
+    public void updateRepository(Receipt receipt) {
         int remainingQuantity = receipt.getQuantity();
         remainingQuantity = subtractPromoQuantity(receipt.getProductName(), remainingQuantity);
         subtractNonPromoQuantity(receipt.getProductName(), remainingQuantity);

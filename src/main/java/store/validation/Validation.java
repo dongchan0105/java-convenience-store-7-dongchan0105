@@ -17,16 +17,9 @@ public class Validation {
     }
 
     public void purchaseGoodsValidator(String input){
-        bracketsFormat(input);
         validateInputFormat(input);
         validateExist(input);
         isEnough(input);
-    }
-
-    private void bracketsFormat(String request) {
-        if (!request.startsWith("[") || !request.endsWith("]")) {
-            throw new IllegalArgumentException(INVALID_FORMAT.getMessage());
-        }
     }
 
 
