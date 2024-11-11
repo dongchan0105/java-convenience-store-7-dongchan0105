@@ -1,5 +1,7 @@
 package store.controller;
 
+import static store.ENUM.ErrorCode.DUPLICATE_PRODUCT_NAME;
+
 import java.util.HashSet;
 import java.util.Set;
 import store.repository.ProductRepository;
@@ -8,11 +10,9 @@ import store.view.InputView;
 
 public class InputController {
     private final Validation validation;
-    private final ProductRepository productRepository;
     private final InputView inputView;
 
     public InputController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
         inputView = new InputView(productRepository);
         validation = new Validation(productRepository);
     }
@@ -37,13 +37,13 @@ public class InputController {
             for (String item : purchase) {
                 String productName = item.replaceAll("[\\[\\]]", "").split("-")[0].trim();
                 if (productNames.contains(productName)) {
-                    throw new IllegalArgumentException("[ERROR] 동일한 제품이 여러 번 입력되었습니다: " + productName);
+                    throw new IllegalArgumentException(DUPLICATE_PRODUCT_NAME + productName);
                 }
                 productNames.add(productName);
                 validation.purchaseGoodsValidator(item);
             }
             return true;
-        } catch (RuntimeException e) {
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return false;
         }

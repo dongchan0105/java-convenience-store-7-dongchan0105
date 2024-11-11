@@ -38,7 +38,7 @@ public class ProductRepositoryTest {
         int initialQuantity = product.getQuantity();
 
         // 구매 후 재고 반영
-        Receipt receipt = new Receipt("사이다", 3, product.getPrice(), 1);
+        Receipt receipt = new Receipt("사이다", 3,0, product.getPrice(), 1);
         productRepository.reflectPurchase(receipt);
 
         // 재고 감소 확인

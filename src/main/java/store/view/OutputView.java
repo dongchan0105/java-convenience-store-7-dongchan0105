@@ -55,8 +55,8 @@ public class OutputView {
         int finalPrice = calculateFinalPrice(receipts, promoDiscount, membershipDiscount);
 
         printTotalPurchase(receipts);
-        System.out.printf(EVENT_DISCOUNT, String.format("-%,d", promoDiscount)); // 항상 -를 붙여 출력
-        System.out.printf(MEMBERSHIP_DISCOUNT, String.format("-%,d", membershipDiscount)); // 항상 -를 붙여 출력
+        System.out.printf(EVENT_DISCOUNT, String.format("-%,d", promoDiscount));
+        System.out.printf(MEMBERSHIP_DISCOUNT, String.format("-%,d", membershipDiscount));
         System.out.printf(TOTAL_PAYMENT, finalPrice);
     }
 
@@ -76,7 +76,7 @@ public class OutputView {
                 .filter(receipt -> receipt.getNonPromoQuantity() != 0)
                 .mapToInt(receipt -> receipt.getNonPromoQuantity() * receipt.getEachPrice()).sum();
         int discount = (int) (nonPromotionProducts * 0.3);
-        return Math.min(discount, 8000); // 최대 8000원 할인
+        return Math.min(discount, 8000);
     }
 
     private static int calculateFinalPrice(List<Receipt> receipts, int promoDiscount, int membershipDiscount) {

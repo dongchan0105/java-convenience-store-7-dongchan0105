@@ -21,8 +21,7 @@ public class ProductRepository {
     private void loadProducts() {
         try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/products.md"))) {
             reader.readLine();
-            reader.lines().forEach(this::addProductList
-            );
+            reader.lines().forEach(this::addProductList);
         } catch (IOException e) {
             System.out.println(IO_ERROR);
         }

@@ -29,17 +29,23 @@ public class InputView {
     }
 
     private static StockInfo getStockInfo(Product product) {
-        String promotionInfo = "";
+        String promotionInfo = getPromotionInfo(product);
+        String quantityInfo = getQuantityInfo(product);
+        return new StockInfo(promotionInfo, quantityInfo);
+    }
+
+    private static String getPromotionInfo(Product product) {
         if (product.getPromotion() != null) {
-            promotionInfo = product.getPromotion();
+            return product.getPromotion();
         }
-        String quantitiyInfo = "";
+        return "";
+    }
+
+    private static String getQuantityInfo(Product product) {
         if (product.getQuantity() > 0) {
-            quantitiyInfo = product.getQuantity() + "개";
-        } else {
-            quantitiyInfo = "재고 없음";
+            return product.getQuantity() + "개";
         }
-        return new StockInfo(promotionInfo, quantitiyInfo);
+        return "재고 없음";
     }
 
     private record StockInfo(String promotionInfo, String stockInfo) {

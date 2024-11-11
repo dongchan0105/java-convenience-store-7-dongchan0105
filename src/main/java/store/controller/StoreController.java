@@ -48,8 +48,8 @@ public class StoreController {
         Map<Product, Integer> purchaseMap = new HashMap<>();
         for (String item : purchaseList) {
             String[] parts = item.replaceAll("[\\[\\]]", "").split("-");
-            int quantity = Integer.parseInt(parts[1]);
-            Product product = productRepository.findAnyByName(parts[0]);
+            int quantity = Integer.parseInt(parts[1].trim());
+            Product product = productRepository.findAnyByName(parts[0].trim());
 
             purchaseMap.put(product, purchaseMap.getOrDefault(product, 0) + quantity);
         }
